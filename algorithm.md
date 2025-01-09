@@ -5,11 +5,57 @@
 
 #### (1) 버블 정렬
 - 인접한 두 원소를 비교하여, 잘못된 순서라면 교환. 이 과정을 배열의 끝까지 반복하면서, 가장 큰 값이 맨 뒤로 버블처럼 올라간다. 
-
+```c
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // 교환
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+```
 #### (2) 선택 정렬
 - 배열에서 가장 작은 원소를 찾아 맨 앞의 원소와 교환하는 방식으로 정렬한다. 이를 배열 끝까지 반복.
+```c
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        // 최소값과 현재 위치의 값 교환
+        int temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+    }
+}
+```
 #### (3) 삽입 정렬 
 - 두 부분으로 나눈 배열을 생각하면서, 두 번째 부분부터 하나씩 첫 번째 부분에 삽입하는 방식. 
+```c
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+        // key보다 큰 값들을 한 칸씩 뒤로 이동
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+
+        // key 삽입
+        arr[j + 1] = key;
+    }
+}
+```
 ### 고급 정렬 알고리즘
 #### (1) 병합 정렬
 - 배열을 재귀적으로 반으로 나누고, 나눈 배열을 다시 정렬하여 합치고 중간 단계에서 배열을 두 개의 부분으로 나눈 후, 두 부분을 병합하여 하나의 정렬된 배열을 만든다. 
@@ -18,7 +64,33 @@
    1. 분할: 입력 배열을 두 개의 하위 배열로 나눈다.
    2. 크기가 1인 배열은 이미 정렬된 상태로 간주하고, 두 개의 배열을 병합하면서 정렬한다.
    3. 병합 과정에서 두 하위 배열을 비교하여 정렬된 배열을 생성한다. 
+```c
+void merge(int arr[], int left, int right) {
+    if (left >= right) return;
+    int mid = (left + right) / 2;
+    merge(arr, left, mid);
+    merge(arr, mid + 1, right);
+    
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    int leftArr[n1], rightArr[n2];
+    
+    for (int i = 0; i < n1; i++) leftArr[i] = arr[left + i];
+    for (int i = 0; i < n2; i++) rightArr[i] = arr[mid + 1 + i];
+    
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (leftArr[i] <= rightArr[j]) arr[k++] = leftArr[i++];
+        else arr[k++] = rightArr[j++];
+    }
+    while (i < n1) arr[k++] = leftArr[i++];
+    while (j < n2) arr[k++] = rightArr[j++];
+}
 
+void mergeSort(int arr[], int left, int right) {
+    merge(arr, left, right);
+}
+```
 #### (2) 퀵 정렬
 - 중간 원소를 기준으로 배열을 나눈 후, 각 부분을 독립적으로 정렬. 배열을 피벗 기준으로 두 부분으로 나누고, 이를 재귀적 정렬. 
 - 시간 복잡도: 평균-O/ 최악-O(N^2)
@@ -29,7 +101,32 @@
      - 피벗보다 작은 요소들을 왼쪽에, 피벗보다 큰 요소들을 오른쪽에 위치시킨다. 이 과정을 파티션이라 함.
    3. 정복:
      - 분할된 두 개의 하위 배열에 대해 재귀적으로 퀵 정렬을 수행.
- 
+ ```c
+ int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return i + 1;
+}
+
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+ ```
 #### (3) 힙 정렬
 - 완전 이진 트리를 기반으로 한 정렬 알고리즘으로 힙 자료구조를 사용.
 - 시간 복잡도 O(n log n)
@@ -41,7 +138,33 @@
 2. 정렬:
    - 루드 노드를 배열의 끝으로 이동시킨다.
    - 남은 배열에서 다시 최대 힙을 구성하고 반복.
+```c
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    
+    if (left < n && arr[left] > arr[largest]) largest = left;
+    if (right < n && arr[right] > arr[largest]) largest = right;
+    
+    if (largest != i) {
+        int temp = arr[i];
+        arr[i] = arr[largest];
+        arr[largest] = temp;
+        heapify(arr, n, largest);
+    }
+}
 
+void heapSort(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
+    for (int i = n - 1; i >= 1; i--) {
+        int temp = arr[0];
+        arr[0] = arr[i];
+        arr[i] = temp;
+        heapify(arr, i, 0);
+    }
+}
+```
 #### (4) 기수 정렬
 - 각 자릿수에 대해 순차적으로 정렬을 수행하는 방식.
 - 가장 낮은 자리수부터 높은 자리수로 정렬.
@@ -50,7 +173,37 @@
 - 장점: 비교 연산 없이 정렬 가능.
 
 - 단점: 입력 데이터의 크기가 크면 메모리 사용량 증가.
+```c
+int getMax(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max) max = arr[i];
+    }
+    return max;
+}
 
+void countingSort(int arr[], int n, int exp) {
+    int output[n];
+    int count[10] = {0};
+    
+    for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++) count[i] += count[i - 1];
+    
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+
+void radixSort(int arr[], int n) {
+    int max = getMax(arr, n);
+    for (int exp = 1; max / exp > 0; exp *= 10) {
+        countingSort(arr, n, exp);
+    }
+}
+```
 #### (5) 계수 정렬
 - 주어진 배열에서 특정 값들이 등장한 횟수를 세고, 그 횟수를 바탕으로 정렬된 배열을 만든다. 
 - 시간 복잡도: O(n+k) / 공간 복잡도: O(k)
@@ -64,7 +217,36 @@
 - 장점: 간격을 줄이면서 정렬하므로 삽입 정렬보다 효율적.
 
 - 단점: O(n^2) 수준의 성능 한계가 있음.
-
+```c
+void countingSort(int arr[], int n) {
+    int output[n];
+    int count[100] = {0};  // 최대값에 맞게 크기 조정
+    
+    for (int i = 0; i < n; i++) count[arr[i]]++;
+    for (int i = 1; i < 100; i++) count[i] += count[i - 1];
+    
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+void countingSort(int arr[], int n) {
+    int output[n];
+    int count[100] = {0};  // 최대값에 맞게 크기 조정
+    
+    for (int i = 0; i < n; i++) count[arr[i]]++;
+    for (int i = 1; i < 100; i++) count[i] += count[i - 1];
+    
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+```
 #### (6) 셀 정렬 
 - 데이터의 특정 간격만큼 떨어진 요소를 비교하고 정렬하며, 점진적으로 간격을 줄여가면서 전체 데이터를 정렬.
 
@@ -77,7 +259,21 @@
   3. 간격 축소:
      - 간격을 점진적으로 줄여가며 정렬을 반복.
      - 최종적으로 간격이 1일 때 일반적인 삽입 정렬 수행.
-
+```c
+void shellSort(int arr[], int n) {
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j >= gap && arr[j - gap] > temp) {
+                arr[j] = arr[j - gap];
+                j -= gap;
+            }
+            arr[j] = temp;
+        }
+    }
+}
+```
 
 ## 탐색
 데이터 구조 내에서 특정 데이터를 찾거나 확인하는 과정. 
@@ -97,7 +293,16 @@
 
 - 장점: 데이터 정렬 여부 상관없이 작동.
 - 단점: 데이터 크기가 커질수록 탐색 시간이 길어짐.
-
+```c
+int linearSearch(int arr[], int n, int target) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == target) {
+            return i;  // 타겟을 찾으면 인덱스 반환
+        }
+    }
+    return -1;  // 타겟을 찾지 못한 경우 -1 반환
+}
+```
 
 
 #### 2. 이진 탐색
@@ -116,7 +321,23 @@
 - 장점: 선형 탐색보다 훨씬 효율적.
 
 - 단점: 데이터 삽입, 삭제 시 정렬을 유지하는 추가 작업 필요.
-
+```c
+int binarySearch(int arr[], int n, int target) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == target) {
+            return mid;  // 타겟을 찾으면 인덱스 반환
+        }
+        if (arr[mid] < target) {
+            low = mid + 1;  // 타겟이 중간값보다 클 경우
+        } else {
+            high = mid - 1;  // 타겟이 중간값보다 작을 경우
+        }
+    }
+    return -1;  // 타겟을 찾지 못한 경우 -1 반환
+}
+```
 
 #### 3. 이진 탐색 변형 
 - 이진 탐색을 기반으로, 특정 조건이나 목표에 맞게 작동.
@@ -158,7 +379,33 @@
 - 장점: 빠른 탐색이 가능하고 동적으로 데이터를 관리할 수 있다.
 - 단점: 삽입이 계속해서 왼쪽 또는 오른쪽에만 일어나면 트리가 편향되면서 불균형 문제가 생길 수 있다.
 - 활용: 검색 엔진, 사전 구현에서 활용됨.
+```c
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
 
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+Node* insert(Node* root, int data) {
+    if (root == NULL) return createNode(data);
+    if (data < root->data) root->left = insert(root->left, data);
+    else root->right = insert(root->right, data);
+    return root;
+}
+
+Node* search(Node* root, int key) {
+    if (root == NULL || root->data == key) return root;
+    if (key < root->data) return search(root->left, key);
+    return search(root->right, key);
+}
+```
 #### 해시 기반 탐색
 - 데이터를 특정한 키에 매핑하는 해시 함수를 사용하여, 데이터를 저장하고 검색하는 방법.
 - 특징: 해시 기반 탐색은 O(1) 의 시간 복잡도를 가진다.
@@ -174,7 +421,38 @@
 - 활용:
   - 사전: 단어와 그 정의를 매핑하는 데 해시 테이블을 사용하여, 단어를 빠르게 찾을 수 있다.
   - 중복 검사: 대량의 데이터를 처리할 때, 해시 집합을 사용할 수 있다.
+```c
+#define TABLE_SIZE 10
 
+typedef struct Node {
+    int key;
+    struct Node* next;
+} Node;
+
+Node* hashTable[TABLE_SIZE];
+
+int hash(int key) {
+    return key % TABLE_SIZE;
+}
+
+void insert(int key) {
+    int index = hash(key);
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->key = key;
+    newNode->next = hashTable[index];
+    hashTable[index] = newNode;
+}
+
+Node* search(int key) {
+    int index = hash(key);
+    Node* current = hashTable[index];
+    while (current != NULL) {
+        if (current->key == key) return current;
+        current = current->next;
+    }
+    return NULL;
+}
+```
 #### 트라이 기반 탐색
 - 문자열 집합을 효율적으로 저장하고 탐색하기 위한 트리 기반 자료 구조에서 사용. 
 - 특징: 문자열이 같은 접두사를 공유하면 동일한 경로를 따른다. 
@@ -195,7 +473,49 @@
 - 장점: 접두사 기반 탐색이 매우 빠르다.
 
 - 단점: 트라이의 노드들은 많은 포인터를 가지므로 메모리 소비가 크다. 
+```c
+#define ALPHABET_SIZE 26
 
+typedef struct TrieNode {
+    struct TrieNode* children[ALPHABET_SIZE];
+    int isEndOfWord;
+} TrieNode;
+
+TrieNode* createNode() {
+    TrieNode* newNode = (TrieNode*)malloc(sizeof(TrieNode));
+    newNode->isEndOfWord = 0;
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        newNode->children[i] = NULL;
+    }
+    return newNode;
+}
+
+void insert(TrieNode* root, const char* word) {
+    TrieNode* currentNode = root;
+    while (*word) {
+        int index = *word - 'a';
+        if (currentNode->children[index] == NULL) {
+            currentNode->children[index] = createNode();
+        }
+        currentNode = currentNode->children[index];
+        word++;
+    }
+    currentNode->isEndOfWord = 1;
+}
+
+int search(TrieNode* root, const char* word) {
+    TrieNode* currentNode = root;
+    while (*word) {
+        int index = *word - 'a';
+        if (currentNode->children[index] == NULL) {
+            return 0;  // 단어를 찾을 수 없음
+        }
+        currentNode = currentNode->children[index];
+        word++;
+    }
+    return currentNode->isEndOfWord;  // 단어 끝인지 확인
+}
+```
 ### 탐색 알고리즘의 시간 복잡도 분석
 - 탐색 알고리즘의 시간 복잡도는 데이터의 구조, 탐색 방식, 그리고 데이터 크기에 따라 달라진다.
 
@@ -224,14 +544,12 @@
 2) 재귀 단계 (Recursive Step)
   - 함수가 자신을 호출하여 문제를 더 작은 하위 문제로 나누는 단계. 
 - 예제:
-<pre>
-<code>// Phython 팩토리얼 
+```python 
 def factorial(n):
     if n == 0:  # 기저 조건
         return 1
     return n * factorial(n - 1)  # 재귀 단계
-</code>
-</pre>
+```
 #### 꼬리 재귀 (Tail Recursion)
 - 함수가 자신을 호출할 때, 호출이 함수의 마지막 작업으로 이루어지는 재귀.
 - 특징: 현재 함수의 스택 프레임을 재사용하므로 스택 오버플로우 위험이 줄어든다. 
@@ -340,7 +658,7 @@ def factorial(n):
 - 주로 반복문을 사용.
 
 ## 그래프 알고리즘
-- 그래프란느 자료 구조를 기반으로 문제를 해결하는 알고리즘. 
+- 그래프라는 자료 구조를 기반으로 문제를 해결하는 알고리즘. 
 ### 탐색
 #### 깊이 우선 탐색
 #### 너비 우선 탐색
@@ -415,8 +733,6 @@ def factorial(n):
 
 ### 모듈러 연산
 - 정의: 두 정수를 나눗셈한 후 나머지를 구하는 연산.
-
-
 - 장점:
    - 큰 수를 다룰 때 값이 제한되어 효율적인 계산이 가능.
    - 계산 결과가 m을 주기로 반복되므로 규칙성이 있음.
@@ -481,8 +797,7 @@ def factorial(n):
    2. 비트마스크와 인덱스 매핑:
       - 비트마스크의 각 비트는 집합의 원소에 대응.
       - i번째 비트가 1이면 S[i]가 포함되고, 0이면 포함되지 않음.
-<pre>
-<code>//python
+```python
 def generate_subsets(elements):
     n = len(elements)
     subsets = []
@@ -501,8 +816,7 @@ elements = ['a', 'b', 'c']
 subsets = generate_subsets(elements)
 for subset in subsets:
     print(subset)
-</code>
-</pre>
+```
 - 장점: 배열이나 리스트 대신 비트연산을 사용하여 저장 공간 절약.
 - 단점: n이 클 경우 시간 및 메모리 부담 증가. 
 - 활용: 조합론 문제.
