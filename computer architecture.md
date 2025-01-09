@@ -58,6 +58,9 @@
   - 프로그램 명령어와 데이터가 동일한 메모리에 있어 충돌 가능. 
 
 
+![Im](/Users/heesu/datastructure.md/images/CA1.png)
+
+
 ![Image](CA1.png)
 
 
