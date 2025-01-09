@@ -16,11 +16,9 @@
 - 단점: 크기를 미리 결정해야하며, 중간에 요소를 삽입하거나 삭제하려면 O(n)의 시간이 소요된다. 
 
 - 예시
-<pre>
-<code>// c언어에서의 고정 크기 배열
+```c
 int arr[5] = {1, 2, 3, 4, 5}; // 크기 5의 배열 생성
-</code>
-</pre>
+```
 
 #### 동적 배열
 - 정의: 배열의 크기가 가변적이며, 런타임 동안 크기를 동적으로 변경할 수 있는 배열.
@@ -32,21 +30,15 @@ int arr[5] = {1, 2, 3, 4, 5}; // 크기 5의 배열 생성
 - 단점: 메모리 할당 및 해제 과정에서 추가적인 시간이 필요하다. 
 
 - 예시
-<pre>
-<code> // c언어에서의 동적 배열
+```c
 int* arr = (int*)malloc(5 * sizeod(int)); // 크기 5의 동적 배열 생성
-</code>
-</pre>
-<pre>
-<code> // Java 동적 배열
+```
+```Java 
 ArrayList<Integer> arr = new ArrayList<>(); 
-</code>
-</pre>
-<pre>
-<code> // Python 동적 배열
+```
+``` Python
 arr = [] # 빈 리스트 생성
-</code>
-</pre>
+```
 
 ### 연결리스트 (Linked List)
 - 정의: 각 데이터 시퀀스가 순서를 가지고 연결된 순차적 구조의 배열.
@@ -61,21 +53,58 @@ arr = [] # 빈 리스트 생성
 - 장점: 동적으로 크기 조정이 가능하다.
 
 - 단점: 역방향 탐색이 불가능하여 특정 요소를 찾으려면 순차적으로 탐색해야 함.
+```c
+struct Node {
+    int data;
+    struct Node* next;
+};
 
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+```
 #### 2. 이중 연결 리스트 (Doubly Linked List)
 - 정의: 각 노드가 이전 노드와 다음 노드를 가리키는 두 개의 포인터를 가지는 연결 리스트.
 
 - 장점: 양방향 탐색이 가능하다. 특정 위치에서 삽입/ 삭제가 더 효율적이다.
 
 - 단점: 추가적인 포인터로 인해 메모리 사용량이 증가. 
+```c
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
 
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = newNode->prev = NULL;
+    return newNode;
+}
+```
 #### 3. 원형 연결 리스트 (Circular Linked List)
 - 정의: 마지막 노드가 NULL 대신 첫 번째 노드를 가리키는 연결 리스트.
 
 - 장점: 모든 노드가 시작점이 될 수 있다. 
 
 - 단점: 개별 노드에 대한 직접적인 접근은 제공되지 않으며, 무한 루프에 빠질 위험이 존재.
+```c
+struct Node {
+    int data;
+    struct Node* next;
+};
 
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = newNode; // 자기 자신을 가리킴
+    return newNode;
+}
+```
  #### 4. 다중 연결 리스트 ( Multilevel Linked List)
  - 정의: 각 노드가 다수의 포인터를 가지는 연결 리스트.
 
@@ -84,7 +113,20 @@ arr = [] # 빈 리스트 생성
 - 장점: 계층적 데이터를 표현하는데 적합.
 
 - 단점: 각 노드가 추가적인 포인터를 가지므로 메모리 사용량이 증가. 
+```c
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* down; // 다른 리스트를 가리킬 포인터
+};
 
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = newNode->down = NULL;
+    return newNode;
+}
+```
 ## 스택 (Stack)
 - 정의: LIFO(Last In, First Out) 구조를 가지는 자료구조. 즉, 마지막에 삽입된 데이터가 가장 먼저 삭제된다.
 
@@ -98,7 +140,60 @@ arr = [] # 빈 리스트 생성
 - 장점: 메모리 접근 속도가 빠르다. 구현이 비교적 간단함.
 
 - 단점: 크기를 동적으로 조정하려면 추가적인 작업이 필요하며, 이로 인해 시간과 메모리가 소모됨. 
+```c
+struct Stack {
+    int* arr;
+    int top;
+    int capacity;
+};
 
+// 스택 생성 함수
+struct Stack* createStack(int capacity) {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->arr = (int*)malloc(capacity * sizeof(int));
+    return stack;
+}
+
+// 스택이 비었는지 확인하는 함수
+int isEmpty(struct Stack* stack) {
+    return stack->top == -1;
+}
+
+// 스택이 가득 찼는지 확인하는 함수
+int isFull(struct Stack* stack) {
+    return stack->top == stack->capacity - 1;
+}
+
+// 스택에 요소 추가하는 함수 (push)
+void push(struct Stack* stack, int value) {
+    if (isFull(stack)) {
+        printf("Stack overflow\n");
+        return;
+    }
+    stack->arr[++stack->top] = value;
+}
+
+// 스택에서 요소 제거하는 함수 (pop)
+int pop(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack underflow\n");
+        return -1; // 에러 값 반환
+    }
+    return stack->arr[stack->top--];
+}
+
+// 스택의 최상단 요소 확인하는 함수 (peek)
+int peek(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return stack->arr[stack->top];
+}
+
+```
 #### 2. 연결 리스트 기반 스택 (Linked List-based Stack)
 - 정의: 스택을 연결 리스트로 구현한 형태.
 
@@ -107,13 +202,152 @@ arr = [] # 빈 리스트 생성
 - 장점: 메모리의 크기가 동적으로 조정되므로, 초기 크기를 지정할 필요 없음. 메모리 낭비 적음.
 
 - 단점: 각 노드가 포인터를 사용하여 다음 노드를 가리키므로, 포인터 관리가 필요하다. 
+```c
+struct Node {
+    int data;
+    struct Node* next;
+};
 
+struct Stack {
+    struct Node* top;
+};
+
+// 스택 생성 함수
+struct Stack* createStack() {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->top = NULL;
+    return stack;
+}
+
+// 스택이 비었는지 확인하는 함수
+int isEmpty(struct Stack* stack) {
+    return stack->top == NULL;
+}
+
+// 스택에 요소 추가하는 함수 (push)
+void push(struct Stack* stack, int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = stack->top;
+    stack->top = newNode;
+}
+
+// 스택에서 요소 제거하는 함수 (pop)
+int pop(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack underflow\n");
+        return -1; // 에러 값 반환
+    }
+    int value = stack->top->data;
+    struct Node* temp = stack->top;
+    stack->top = stack->top->next;
+    free(temp);
+    return value;
+}
+
+// 스택의 최상단 요소 확인하는 함수 (peek)
+int peek(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return stack->top->data;
+}
+
+```
 #### 3. 최소값/최대값 추적 스택 (Min/Max Stack)
 - 정의: 스택에 데이터를 삽입하면서 동시에 스택에 저장된 최소값과 최대값을 추적할 수 있는 자료구조.
 - 특징: 삽입과 삭제가 모두 O(1) 시간 내에 이루어지므로, 최소값과 최대값 추적에 있어 효율적이다.
 - 장점: 별도의 반복문을 사용할 필요 없이 최소값과 최대값을 찾을 수 있다.
 - 단점: 두 개의 스택을 사용하거나 하나의 스택에 최소값과 최대값을 저장하는 방식이기 때문에 공간 복잡도가 증가한다. 
+```c
+struct Stack {
+    int* arr;
+    int top;
+    int capacity;
+};
 
+struct MinMaxStack {
+    struct Stack* mainStack;
+    struct Stack* minStack;
+    struct Stack* maxStack;
+};
+
+// 스택 생성 함수
+struct Stack* createStack(int capacity) {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->arr = (int*)malloc(capacity * sizeof(int));
+    return stack;
+}
+
+// 스택에 요소 추가하는 함수 (push)
+void push(struct MinMaxStack* stack, int value) {
+    // mainStack에 값 추가
+    push(stack->mainStack, value);
+
+    // minStack에 최소값 추가
+    if (isEmpty(stack->minStack) || value <= peek(stack->minStack)) {
+        push(stack->minStack, value);
+    }
+
+    // maxStack에 최대값 추가
+    if (isEmpty(stack->maxStack) || value >= peek(stack->maxStack)) {
+        push(stack->maxStack, value);
+    }
+}
+
+// 스택에서 요소 제거하는 함수 (pop)
+int pop(struct MinMaxStack* stack) {
+    if (isEmpty(stack->mainStack)) {
+        printf("Stack underflow\n");
+        return -1; // 에러 값 반환
+    }
+
+    int value = pop(stack->mainStack);
+
+    // minStack에서 최소값 제거
+    if (value == peek(stack->minStack)) {
+        pop(stack->minStack);
+    }
+
+    // maxStack에서 최대값 제거
+    if (value == peek(stack->maxStack)) {
+        pop(stack->maxStack);
+    }
+
+    return value;
+}
+
+// 스택의 최상단 요소 확인하는 함수 (peek)
+int peek(struct MinMaxStack* stack) {
+    if (isEmpty(stack->mainStack)) {
+        printf("Stack is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return peek(stack->mainStack);
+}
+
+// 현재 최소값 확인 함수
+int getMin(struct MinMaxStack* stack) {
+    if (isEmpty(stack->minStack)) {
+        printf("Stack is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return peek(stack->minStack);
+}
+
+// 현재 최대값 확인 함수
+int getMax(struct MinMaxStack* stack) {
+    if (isEmpty(stack->maxStack)) {
+        printf("Stack is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return peek(stack->maxStack);
+}
+
+```
 ## 큐 (Queue)
 - 정의: 선입선출 (Firs In, First Out, FIFO) 방식으로 데이터를 처리하는 자료구조.
 
@@ -133,7 +367,70 @@ arr = [] # 빈 리스트 생성
 - 장점: 배열의 인덱스를 이용하여 큐의 데이터를 빠르게 접근할 수 있음.
 
 - 단점: 뒤에서만 데이터를 삽입할 수 있는 큐의 front에서 데이터를 삭제하면서 배열의 앞부분에 빈 공간이 남게 되면 메모리 낭비가 초래될 수 있다.
+```c
+struct Queue {
+    int* arr;
+    int front;
+    int rear;
+    int capacity;
+};
 
+// 큐 생성 함수
+struct Queue* createQueue(int capacity) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = capacity;
+    queue->front = -1;
+    queue->rear = -1;
+    queue->arr = (int*)malloc(capacity * sizeof(int));
+    return queue;
+}
+
+// 큐가 비었는지 확인하는 함수
+int isEmpty(struct Queue* queue) {
+    return queue->front == -1;
+}
+
+// 큐가 가득 찼는지 확인하는 함수
+int isFull(struct Queue* queue) {
+    return queue->rear == queue->capacity - 1;
+}
+
+// 큐에 요소 추가하는 함수 (enqueue)
+void enqueue(struct Queue* queue, int value) {
+    if (isFull(queue)) {
+        printf("Queue overflow\n");
+        return;
+    }
+    if (queue->front == -1) {
+        queue->front = 0;
+    }
+    queue->arr[++queue->rear] = value;
+}
+
+// 큐에서 요소 제거하는 함수 (dequeue)
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue underflow\n");
+        return -1; // 에러 값 반환
+    }
+    int value = queue->arr[queue->front];
+    if (queue->front == queue->rear) { // 큐가 비었을 경우
+        queue->front = queue->rear = -1;
+    } else {
+        queue->front++;
+    }
+    return value;
+}
+
+// 큐의 첫 번째 요소 확인하는 함수 (front)
+int front(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return queue->arr[queue->front];
+}
+```
 ### 2. 연결 리스트 기반 큐 (Linked List-based Queue)
 - 정의: 큐의 요소들이 연결 리스트의 노드로 저장되는 자료구조. 
 
@@ -142,7 +439,70 @@ arr = [] # 빈 리스트 생성
 - 장점: 연결 리스트 기반 큐는 필요한 만큼만 메모리를 할당하므로 메모리 낭비를 줄일 수 있다. 
 
 - 단점: 포인터를 저장해야 하므로, 배열 기반 큐보다 더 많은 메모리를 사용한다. 
+```c
+struct Node {
+    int data;
+    struct Node* next;
+};
 
+struct Queue {
+    struct Node* front;
+    struct Node* rear;
+};
+
+// 큐 생성 함수
+struct Queue* createQueue() {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = queue->rear = NULL;
+    return queue;
+}
+
+// 큐가 비었는지 확인하는 함수
+int isEmpty(struct Queue* queue) {
+    return queue->front == NULL;
+}
+
+// 큐에 요소 추가하는 함수 (enqueue)
+void enqueue(struct Queue* queue, int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (queue->rear == NULL) {
+        queue->front = queue->rear = newNode;
+        return;
+    }
+    queue->rear->next = newNode;
+    queue->rear = newNode;
+}
+
+// 큐에서 요소 제거하는 함수 (dequeue)
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue underflow\n");
+        return -1; // 에러 값 반환
+    }
+
+    struct Node* temp = queue->front;
+    int value = temp->data;
+    queue->front = queue->front->next;
+
+    if (queue->front == NULL) { // 큐가 비었을 경우
+        queue->rear = NULL;
+    }
+    free(temp);
+    return value;
+}
+
+// 큐의 첫 번째 요소 확인하는 함수 (front)
+int front(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return queue->front->data;
+}
+```
 ### 3. 순환 큐 (Circular Queue)
 - 정의: 배열을 원형으로 연결한 형태. front와 rear이 배열의 끝에 도달하면 다시 처음으로 돌아가서 데이터를 삽입하고 삭제할 수 있음.
 
@@ -152,7 +512,73 @@ arr = [] # 빈 리스트 생성
 
 - 단점: 큐의 크기를 동적으로 확장할 수 없음. 
 
+```c
+struct Queue {
+    int* arr;
+    int front;
+    int rear;
+    int capacity;
+};
 
+// 큐 생성 함수
+struct Queue* createQueue(int capacity) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = capacity;
+    queue->front = queue->rear = -1;
+    queue->arr = (int*)malloc(capacity * sizeof(int));
+    return queue;
+}
+
+// 큐가 비었는지 확인하는 함수
+int isEmpty(struct Queue* queue) {
+    return queue->front == -1;
+}
+
+// 큐가 가득 찼는지 확인하는 함수
+int isFull(struct Queue* queue) {
+    return (queue->rear + 1) % queue->capacity == queue->front;
+}
+
+// 큐에 요소 추가하는 함수 (enqueue)
+void enqueue(struct Queue* queue, int value) {
+    if (isFull(queue)) {
+        printf("Queue overflow\n");
+        return;
+    }
+
+    if (isEmpty(queue)) {
+        queue->front = queue->rear = 0;
+    } else {
+        queue->rear = (queue->rear + 1) % queue->capacity;
+    }
+    queue->arr[queue->rear] = value;
+}
+
+// 큐에서 요소 제거하는 함수 (dequeue)
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue underflow\n");
+        return -1; // 에러 값 반환
+    }
+
+    int value = queue->arr[queue->front];
+    if (queue->front == queue->rear) { // 큐가 비었을 경우
+        queue->front = queue->rear = -1;
+    } else {
+        queue->front = (queue->front + 1) % queue->capacity;
+    }
+    return value;
+}
+
+// 큐의 첫 번째 요소 확인하는 함수 (front)
+int front(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return queue->arr[queue->front];
+}
+```
 ### 4. 우선순위 큐 (Priority Queue)
 - 정의: 큐에 저장된 요소들이 우선순위에 따라 처리되는 자료구조. 각 요소는 우선순위를 가지고 있음. 
 
@@ -164,7 +590,65 @@ arr = [] # 빈 리스트 생성
 - 장점: 삽입하거나 삭제하는 방식이 간단하고 이해하기 쉬움.
 
 - 단점: 요소를 삭제하고 삽입할 경우, 배열이 정렬된 상태를 유지하기 위한 작업이 필요하다.
+```c
+struct PriorityQueue {
+    int* arr;
+    int size;
+    int capacity;
+};
 
+// 큐 생성 함수
+struct PriorityQueue* createQueue(int capacity) {
+    struct PriorityQueue* pq = (struct PriorityQueue*)malloc(sizeof(struct PriorityQueue));
+    pq->capacity = capacity;
+    pq->size = 0;
+    pq->arr = (int*)malloc(capacity * sizeof(int));
+    return pq;
+}
+
+// 큐가 비었는지 확인하는 함수
+int isEmpty(struct PriorityQueue* pq) {
+    return pq->size == 0;
+}
+
+// 큐에 요소 추가하는 함수 (enqueue)
+void enqueue(struct PriorityQueue* pq, int value) {
+    if (pq->size == pq->capacity) {
+        printf("Queue overflow\n");
+        return;
+    }
+
+    int i;
+    // 우선순위가 높은 요소를 정렬하여 삽입
+    for (i = pq->size - 1; i >= 0; i--) {
+        if (pq->arr[i] > value) {  // 낮은 값이 높은 우선순위로 간주
+            pq->arr[i + 1] = pq->arr[i];
+        } else {
+            break;
+        }
+    }
+    pq->arr[i + 1] = value;
+    pq->size++;
+}
+
+// 큐에서 요소 제거하는 함수 (dequeue)
+int dequeue(struct PriorityQueue* pq) {
+    if (isEmpty(pq)) {
+        printf("Queue underflow\n");
+        return -1; // 에러 값 반환
+    }
+    return pq->arr[--pq->size];
+}
+
+// 큐의 첫 번째 요소 확인하는 함수 (front)
+int front(struct PriorityQueue* pq) {
+    if (isEmpty(pq)) {
+        printf("Queue is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return pq->arr[0];
+}
+```
 #### (2) 힙 기반 우선순위 큐
 - 정의 : 힙 자료구조를 사용하여 구현된 우선순위 큐. 
 
@@ -175,14 +659,107 @@ arr = [] # 빈 리스트 생성
 - 장점: 삽입과 삭제는 O(log n) 시간에 이루어지므로, 효율적으로 큐의 우선순위 처리와 변경이 가능. 
 
 - 단점: 랜덤 접근이 불가능. 트리 구조를 유지하기 위해 추가적인 메모리 공간이 필요하다. 
+```c
+struct PriorityQueue {
+    int* arr;
+    int size;
+    int capacity;
+};
 
+// 힙 구조에서 부모 인덱스를 반환하는 함수
+int parent(int i) {
+    return (i - 1) / 2;
+}
+
+// 힙 구조에서 왼쪽 자식 인덱스를 반환하는 함수
+int leftChild(int i) {
+    return 2 * i + 1;
+}
+
+// 힙 구조에서 오른쪽 자식 인덱스를 반환하는 함수
+int rightChild(int i) {
+    return 2 * i + 2;
+}
+
+// 힙을 아래로 내려가며 재정렬하는 함수 (heapify)
+void heapify(struct PriorityQueue* pq, int i) {
+    int smallest = i;
+    int left = leftChild(i);
+    int right = rightChild(i);
+
+    if (left < pq->size && pq->arr[left] < pq->arr[smallest]) {
+        smallest = left;
+    }
+    if (right < pq->size && pq->arr[right] < pq->arr[smallest]) {
+        smallest = right;
+    }
+    if (smallest != i) {
+        // 요소를 교환하고 재귀적으로 힙을 다시 정렬
+        int temp = pq->arr[i];
+        pq->arr[i] = pq->arr[smallest];
+        pq->arr[smallest] = temp;
+        heapify(pq, smallest);
+    }
+}
+
+// 힙 구조에서 최상위 요소를 추출하는 함수 (dequeue)
+int dequeue(struct PriorityQueue* pq) {
+    if (pq->size == 0) {
+        printf("Queue underflow\n");
+        return -1; // 에러 값 반환
+    }
+
+    int root = pq->arr[0];
+    pq->arr[0] = pq->arr[--pq->size];
+    heapify(pq, 0);
+    return root;
+}
+
+// 큐에 요소 추가하는 함수 (enqueue)
+void enqueue(struct PriorityQueue* pq, int value) {
+    if (pq->size == pq->capacity) {
+        printf("Queue overflow\n");
+        return;
+    }
+
+    pq->arr[pq->size++] = value;
+
+    // 부모와 비교하여 힙을 위로 올려가며 정렬
+    int i = pq->size - 1;
+    while (i > 0 && pq->arr[parent(i)] > pq->arr[i]) {
+        int temp = pq->arr[i];
+        pq->arr[i] = pq->arr[parent(i)];
+        pq->arr[parent(i)] = temp;
+        i = parent(i);
+    }
+}
+
+// 큐의 첫 번째 요소 확인하는 함수 (front)
+int front(struct PriorityQueue* pq) {
+    if (pq->size == 0) {
+        printf("Queue is empty\n");
+        return -1; // 에러 값 반환
+    }
+    return pq->arr[0];
+}
+
+// 큐 생성 함수
+struct PriorityQueue* createQueue(int capacity) {
+    struct PriorityQueue* pq = (struct PriorityQueue*)malloc(sizeof(struct PriorityQueue));
+    pq->capacity = capacity;
+    pq->size = 0;
+    pq->arr = (int*)malloc(capacity * sizeof(int));
+    return pq;
+}
+```
 ## 데크 (Deque)
 - 정의: 양쪽 끝에서 삽입과 삭제가 모두 가능한 큐.
 
-- 특징: 덱은 FIFO 와 LIFO 의 특성을 혼합할 수 있다. 
-* 앞에서 삽입하고 뒤에서 삭제하면 큐처럼 작동.
-  * 뒤에서 삽입하고 앞에서 삭제하면 스택처럼 작동.
-  * 주요연산: insertFront(), insertRear(), deleteFront(), deleteRear(), getFront(), getRear()
+- 특징: 
+  - 덱은 FIFO 와 LIFO 의 특성을 혼합할 수 있다. 
+  - 앞에서 삽입하고 뒤에서 삭제하면 큐처럼 작동.
+  - 뒤에서 삽입하고 앞에서 삭제하면 스택처럼 작동.
+  - 주요연산: insertFront(), insertRear(), deleteFront(), deleteRear(), getFront(), getRear()
   
 ### 1. 배열 기반 데크 (Array-based Deque)
 - 정의: 배열을 사용하여 덱을 구현한 자료구조. 
@@ -194,8 +771,7 @@ arr = [] # 빈 리스트 생성
 - 단점: 순환 방식으로 사용하더라도, 배열의 크기가 크면 메모리 낭비가 발생할 수 있음. 
 
 - 예시 코드 
-<pre>
-<code> // c언어에서의 배열 기반 덱
+```c
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -303,8 +879,7 @@ int main() {
     
     return 0;
 }
-</code>
-</pre>
+```
 
 
 ### 2. 연결 리스트 기반 데크 (Linke List-based Deque)
@@ -317,8 +892,7 @@ int main() {
 - 단점: 포인터가 추가되므로, 배열 기반 덱보다 더 많은 메모리가 필요하다. 
 
 - 예시 코드
-<pre>
-<code> // c언어에서의 연결 리스트 기반 데크
+```c
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -430,8 +1004,7 @@ int main() {
 
     return 0;
 }
-</code>
-</pre>
+```
 
 ## 트리 (Tree)
 - 정의: 노드들로 구성되며, 순환이 없고 연결된 방향성 비순환 그래프.
@@ -473,65 +1046,27 @@ int main() {
 - 왼쪽 자식: 노드의 첫 번째 자식을 가리킴.
 - 오른쪽 형제: 동일 부모를 가진 노드 중 바로 오른쪽에 위치한 형제를 가리킴.
 - 변환 방법: 일반 트리의 각 노드는 첫 번째 자식을 왼쪽 자식으로, 그 외의 형제 노드를 오른쪽 형제로 연결. 
-<pre>
-<code> // 일반 트리
-      A
-     /|\
-    B C D
-   / \   \
-  E   F   G
-  
-// Left-Child Right-Sibling 트리로 변환
-      A
-     /
-    B
-   / \
-  E   C
-   \   \
-    F   D
-         \
-          G
-</code>
-</pre>
 
 ### 트리 순회 
 - 정의: 트리 구조에서 모든 노드를 방문하는 과정. 
 
-<pre>
-<code> // 트리 구조
-    A
-   / \
-  B   C
- / \
-D   E
-</code>
-</pre>
 #### (1) 깊이 우선 탐색 (DFS: Depth First Search)
 - 트리의 가장 깊은 노드까찌 탐색한 뒤, 다시 올라가며 다른 노드를 방문하는 방식. 
 #### 전위 순회 (Pre-order Traversal)
 - 노드 → 왼쪽 서브트리 → 오른쪽 서브트리 순서로 방문.
-- 탐색 순서: A → B → D → E → C
+- 탐색 순서: A → B → D → E → C → F → G
 #### 중위 순회 (In-order Traversal)
 - 왼쪽 서브트리 → 노드 → 오른쪽 서브트리 순서로 방문.
-- 탐색 순서: D → B → E → A → C
+- 탐색 순서: D → B → E → A → F → C → G
 #### 후위 순회 (Post-order Traversal)
 - 왼쪽 서브트리 → 오른쪽 서브트리 → 노드 순서로 방문.
-- 탐색 순서: D → E → B → C → A
+- 탐색 순서: D → E → B → F → G → C → A
 #### (2) 너비 우선 탐색 (BFS: Breadth First Search)
 - 트리의 레벨 순서로 방문. 
 #### 레벨 순회 (Level Order Traversal)
 - 너비 우선 탐색 방식으로 노드를 루트에서부터 레벨별로 차례로 방문.
-- 같은 깊이에 있는 노드를 모두 방문한 후 다음 깊이로 이동. 
-<pre>
-<code> // 트리구조
-    A
-   / \
-  B   C
- / \   \
-D   E   F
-</code>
-</pre>
-- 탐색 순서: A → B → C → D → E → F
+- 같은 깊이에 있는 노드를 모두 방문한 후 다음 레벨의 노드 탐색. 
+- 탐색 순서: A → B → C → D → E → F → G
 
 ### 이진 탐색 트리 (Binary Search Tree, BST)
 - 노드의 키 값 규칙을 만족. 
@@ -582,6 +1117,7 @@ D   E   F
  - 크기 조정:
    - union 연산에서 사용되는 최적화 기법.
    - 작은 트리를 더 큰 트리 아래에 붙여서 트리의 높이를 최소화하도록 함.
+- 외부 링크: <https://velog.io/@jjhjjh1159/Union-Find-최적화>
 
 ## 그래프 (Graph)
 - 노드(정점)와 간선으로 구성된 수학적 구조.
@@ -614,10 +1150,100 @@ D   E   F
 #### (1) 너비 우선 탐색
 - 큐 자료구조를 사용하여 그래프를 탐색.
 - 시작 정점에서부터 인접한 정점들을 차례로 방문하며, 가까운 곳부터 탐색.
+```c
+int graph[10][10] = {0};
+int visited[10] = {0};
+
+typedef struct {
+    int items[10];
+    int front, rear;
+} Queue;
+
+void initQueue(Queue* q) {
+    q->front = -1;
+    q->rear = -1;
+}
+
+int isEmpty(Queue* q) {
+    return q->front == -1;
+}
+
+void enqueue(Queue* q, int value) {
+    if (q->rear == MAX_NODES - 1) return;
+    if (q->front == -1) q->front = 0;
+    q->items[++q->rear] = value;
+}
+
+int dequeue(Queue* q) {
+    if (isEmpty(q)) return -1;
+    int value = q->items[q->front++];
+    if (q->front > q->rear) q->front = q->rear = -1;
+    return value;
+}
+
+void bfs(int start) {
+    Queue q;
+    initQueue(&q);
+    enqueue(&q, start);
+    visited[start] = 1;
+
+    while (!isEmpty(&q)) {
+        int node = dequeue(&q);
+
+        for (int i = 0; i < MAX_NODES; i++) {
+            if (graph[node][i] == 1 && !visited[i]) {
+                enqueue(&q, i);
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+int main() {
+    graph[0][1] = graph[1][0] = 1;
+    graph[0][2] = graph[2][0] = 1;
+    graph[1][3] = graph[3][1] = 1;
+    graph[2][4] = graph[4][2] = 1;
+
+    bfs(0);  // 0번 노드부터 탐색 시작
+
+    return 0;
+}
+```
 #### (2) 깊이 우선 탐색
 - 스택 또는 재귀를 사용.
 - 시작 정점에서부터 가능한 한 깊게 탐색하고, 더 이상 갈 곳이 없으면 돌아가서 다른 경로 탐색.
+```c
+int graph[10][10] = {0};
+int visited[10] = {0};
 
+// 깊이 우선 탐색 함수
+void dfs(int node) {
+    // 노드를 방문했다고 표시
+    visited[node] = 1;
+    printf("%d ", node);
+
+    // 인접 노드를 재귀적으로 탐색
+    for (int i = 0; i < 10; i++) {
+        if (graph[node][i] == 1 && !visited[i]) {
+            dfs(i);
+        }
+    }
+}
+
+int main() {
+    // 그래프의 간선 정의 (0부터 시작하는 인덱스)
+    graph[0][1] = graph[1][0] = 1;
+    graph[0][2] = graph[2][0] = 1;
+    graph[1][3] = graph[3][1] = 1;
+    graph[2][4] = graph[4][2] = 1;
+
+    printf("DFS 탐색 순서: ");
+    dfs(0);  // 0번 노드부터 탐색 시작
+
+    return 0;
+}
+```
 ### 최단 경로 알고리즘
 #### 다익스트라 알고리즘
 - 가중치가 있는 그래프에서 두 정점 사이의 최단 경로를 찾는 알고리즘. 
@@ -659,6 +1285,8 @@ D   E   F
 ### 해시 테이블
 - 키를 입력받아, 해시 값을 인덱스로 사용하여 데이터를 찾을 수 있도록 하는 자료 구조. 
 - 배열로 구현됨.
+
+![image](https://gbdai.tistory.com/16?pidx=2)
 ### 해시 함수
   임의의 크기를 가진 입력 데이터를 받아들여, 이를 고정된 크기의 출력 값(해시 값) 으로 변환하는 함수.
   - 일방향성: 입력값으로 출력값을 계산할 수 있지만, 출력값만 가지고 원본 데이터 추측 불가능.
