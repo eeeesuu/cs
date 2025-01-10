@@ -1031,12 +1031,21 @@ int main() {
 #### 포화 이진 트리 (Full Binary Tree)
 - 모든 레벨의 노드가 꽉 찬 상태.
 - 각 노드는 0개 또는 2개의 자식을 가짐.
+
+![Images](images/포화이진트리.png
+)
 #### 완전 이진 트리 (Complete Binary Tree)
 - 마지막 레벨을 제외한 모든 레벨이 꽉 차 있음.
 - 마지막 레벨의 노드는 왼쪽에서 오른쪽으로 채워져야 함.
+
+![Image](images/완전이진트리.png)
+
 #### 경사 트리 (Skewed Tree)
 - 트리의 모든 노드가 한쪽 방향으로만 치우쳐 있는 트리
 - 트리가 선형 구조처럼 작동하는 구조.
+
+![Image](images/경사트리.png)
+
 #### 수식 트리 (Expression Tree)
 - 수학적 표현식을 트리 구조로 나타낸 것으로, 수식의 연산자와 피연산자를 트리의 노드로 표현. 
 - 내부 노드는 연산자, 리프 노드는 피연산자를 저장.
@@ -1054,18 +1063,30 @@ int main() {
 - 트리의 가장 깊은 노드까찌 탐색한 뒤, 다시 올라가며 다른 노드를 방문하는 방식. 
 #### 전위 순회 (Pre-order Traversal)
 - 노드 → 왼쪽 서브트리 → 오른쪽 서브트리 순서로 방문.
+
+![Image](images/전위순회.png)
+
 - 탐색 순서: A → B → D → E → C → F → G
 #### 중위 순회 (In-order Traversal)
 - 왼쪽 서브트리 → 노드 → 오른쪽 서브트리 순서로 방문.
+
+![Image](images/중위순회.png)
+
 - 탐색 순서: D → B → E → A → F → C → G
 #### 후위 순회 (Post-order Traversal)
 - 왼쪽 서브트리 → 오른쪽 서브트리 → 노드 순서로 방문.
+
+![Image](images/후위순회.png)
+
 - 탐색 순서: D → E → B → F → G → C → A
 #### (2) 너비 우선 탐색 (BFS: Breadth First Search)
 - 트리의 레벨 순서로 방문. 
 #### 레벨 순회 (Level Order Traversal)
 - 너비 우선 탐색 방식으로 노드를 루트에서부터 레벨별로 차례로 방문.
-- 같은 깊이에 있는 노드를 모두 방문한 후 다음 레벨의 노드 탐색. 
+- 같은 깊이에 있는 노드를 모두 방문한 후 다음 레벨의 노드 탐색.
+
+![Image](images/레벨%20순회.png)
+
 - 탐색 순서: A → B → C → D → E → F → G
 
 ### 이진 탐색 트리 (Binary Search Tree, BST)
@@ -1086,10 +1107,16 @@ int main() {
 - 모든 노드의 왼쪽 서브트리와 오른쪽 서브트리의 높이 차이가 1 이하인 이진 트리. 
 ##### AVL 트리 (AVL Tree)
 - 왼쪽과 오른쪽 서브트리의 높이 차이가 최대 1.
-- 삽입과 삭제 시 회전을 통해 균형을 유지
+- 삽입과 삭제 시 회전을 통해 균형을 
+
+![Image](images/AVL%20트리.png)
+
 ##### 레드-블랙 트리 (Red-Black Tree)
 - 모든 경로에서 검은 노드의 수가 동일한 트리. 
 - 삽입/ 삭제 시 약간의 불균형 허용.
+
+![Image](images/레드블랙트리.png)
+
 ##### Splay Tree
 - 트리에서 특정 노드에 접근할 때마다 splay라는 연산을 통해 그 노드를 트리의 루트로 이동. 
 - 트리에 있는 요소들을 자주 참조할 때 해당 요소들을 트리의 상단으로 끌어올려 접근 효율을 높임. 
@@ -1110,6 +1137,9 @@ int main() {
 #### Union-Find 알고리즘
 - 서로 겹치지 않는 집합을 효율적으로 합치고, 특정 원소가 속한 집합을 찾는 문제를 해결. 
 - 분리 집합을 합치는 union 연산과 트리의 루트를 찾아가는 과정인 find 연산을 제공.
+
+![Image](images/union-find%20alg.png)
+
 #### 경로 압축 및 크기 조정 
 - 경로 압축: 
    - find 연산에서 사용되는 최적화 기법.
@@ -1127,13 +1157,22 @@ int main() {
 - 간선이 방향을 가지는 그래프.
 - 간선은 출발점에서 도착점으로 연결됨.
 - 간선은 (A → B)와 같이 방향을 가진다. 
+
+![Image](images/방향그래프.png)
+
 #### 무방향 그래프 
 - 간선에 방향이 없는 그래프.
 - 두 정점은 서로 양방향으로 연결됨.
 - 간선은 (A, B)와 같이 두 정점 간의 관계로 나타낸다. 
+
+![Image](images/무방향그래프.png)
+
 #### 가중 그래프 
 - 간선에 가중치가 부여된 그래프.
 - 가중치는 두 정점 간의 거리나 비용 등을 나타냄.
+
+![Image](images/가중그래프.png)
+
 #### 비가중 그래프
 - 간선에 가중치가 없는 그래프.
 
@@ -1143,8 +1182,14 @@ int main() {
 - 각 배열의 값은 두 정점 간의 간선의 존재 여부를 나타냄. 
 - 방향 그래프에서는 (i, j) 위치에 간선이 있으면 1, 없으면 0을 저장.
 - 무방향 그래프에서는 (i, j)와 (j, i)가 모두 1로 표시.
+
+![Image](images/인접행렬.png)
+
 #### (2) 인접 리스트 (Adjacency List)
 - 각 정점에 대해 해당 정점과 연결된 모든 정점들의 리스트를 저장. 
+
+![Image](images/인접리스트.png)
+
 
 ### 그래프 순회
 #### (1) 너비 우선 탐색
@@ -1247,20 +1292,242 @@ int main() {
 ### 최단 경로 알고리즘
 #### 다익스트라 알고리즘
 - 가중치가 있는 그래프에서 두 정점 사이의 최단 경로를 찾는 알고리즘. 
+```c
+#include <limits.h>
+
+#define N 100  // 최대 정점 개수
+#define INF INT_MAX
+
+void dijkstra(int graph[N][N], int start, int dist[], int n) {
+    int visited[N] = {0};  // 방문 여부 배열
+
+    // 초기화
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+    }
+    dist[start] = 0;
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = -1;
+
+        // 최소 거리 정점 u 선택
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && (u == -1 || dist[i] < dist[u])) {
+                u = i;
+            }
+        }
+
+        visited[u] = 1;
+
+        // 인접한 정점의 거리 갱신
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && graph[u][v] != 0 && dist[u] != INF) {
+                int newDist = dist[u] + graph[u][v];
+                if (newDist < dist[v]) {
+                    dist[v] = newDist;
+                }
+            }
+        }
+    }
+}
+```
 #### 벨만-포드 알고리즘
 - 다익스트라와 비슷하지만 음의 가중치를 다룰 수 있는 알고리즘.
+```c
+#define N 100  // 최대 정점 개수
+#define INF 1000000
+
+typedef struct {
+    int src, dest, weight;
+} Edge;
+
+void bellmanFord(Edge edges[], int edgeCount, int start, int dist[], int n) {
+    // 거리 배열 초기화
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+    }
+    dist[start] = 0;
+
+    // 정점 - 1번 반복
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < edgeCount; j++) {
+            int u = edges[j].src;
+            int v = edges[j].dest;
+            int weight = edges[j].weight;
+
+            if (dist[u] != INF && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+            }
+        }
+    }
+
+    // 음수 가중치 사이클 확인
+    for (int j = 0; j < edgeCount; j++) {
+        int u = edges[j].src;
+        int v = edges[j].dest;
+        int weight = edges[j].weight;
+
+        if (dist[u] != INF && dist[u] + weight < dist[v]) {
+            // 음수 사이클 존재
+            dist[0] = -1;  // 에러 표시로 사용
+            return;
+        }
+    }
+}
+```
 #### 폴로이드-워셜 알고리즘
 - 모든 정점 간의 최단 경로를 구하는 알고리즘.
+```c
+void floydWarshall(int graph[][N], int N) {
+    for (int k = 0; k < N; k++) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (graph[i][k] != INF && graph[k][j] != INF) {
+                    int newDist = graph[i][k] + graph[k][j];
+                    if (newDist < graph[i][j]) {
+                        graph[i][j] = newDist;
+                    }
+                }
+            }
+        }
+    }
+}
+```
 ### 최소 신장 트리
 - 가중치가 있는 연결 그래프에서 모든 정점을 최소 비용으로 연결하는 트리. 
 #### 크루스칼 알고리즘
 - 간선 중심의 알고리즘. 
 - 간선들을 가중치 순으로 정렬한 후, 가중치가 작은 간선부터 하나씩 선택하여 트리를 확장. 
 - 사이클이 생기지 않도록 검사. 
+```c
+#define N 100  // 최대 정점 개수
+#define M 500  // 최대 간선 개수
+
+typedef struct {
+    int src, dest, weight;
+} Edge;
+
+Edge edges[M];
+int parent[N], rank[N];
+
+void init(int n) {
+    for (int i = 0; i < n; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+int find(int x) {
+    if (parent[x] != x) {
+        parent[x] = find(parent[x]);  // 경로 압축
+    }
+    return parent[x];
+}
+
+void unite(int x, int y) {
+    int rootX = find(x);
+    int rootY = find(y);
+
+    if (rootX != rootY) {
+        if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+        } else if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY;
+        } else {
+            parent[rootY] = rootX;
+            rank[rootX]++;
+        }
+    }
+}
+
+void sortEdges(int edgeCount) {
+    for (int i = 0; i < edgeCount - 1; i++) {
+        for (int j = 0; j < edgeCount - i - 1; j++) {
+            if (edges[j].weight > edges[j + 1].weight) {
+                Edge temp = edges[j];
+                edges[j] = edges[j + 1];
+                edges[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int kruskal(int edgeCount, int n) {
+    init(n);
+    sortEdges(edgeCount);
+
+    int mstWeight = 0;
+    int mstEdges = 0;
+
+    for (int i = 0; i < edgeCount && mstEdges < n - 1; i++) {
+        int u = edges[i].src;
+        int v = edges[i].dest;
+        int weight = edges[i].weight;
+
+        if (find(u) != find(v)) {
+            unite(u, v);
+            mstWeight += weight;
+            mstEdges++;
+        }
+    }
+
+    return mstWeight;  // MST의 총 가중치
+}
+```
 #### 프림 알고리즘
 - 정점 중심의 알고리즘. 
 - 하나의 정점에서 시작해, 연결된 간선 중 가장 작은 가중치의 간선을 계속 선택하며 트리를 확장.
+```c
+#include <limits.h>
 
+#define N 100  // 최대 정점 개수
+
+int graph[N][N];  // 그래프의 인접 행렬
+int key[N];       // 최소 가중치 배열
+int parent[N];    // 부모 배열
+int inMST[N];     // MST에 포함 여부
+
+void prim(int n) {
+    for (int i = 0; i < n; i++) {
+        key[i] = INT_MAX;
+        inMST[i] = 0;
+    }
+
+    key[0] = 0;  // 첫 번째 정점부터 시작
+    parent[0] = -1;  // 첫 번째 정점은 부모가 없음
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = -1;
+
+        // 가장 작은 key 값을 가지는 정점 u 찾기
+        for (int v = 0; v < n; v++) {
+            if (!inMST[v] && (u == -1 || key[v] < key[u])) {
+                u = v;
+            }
+        }
+
+        inMST[u] = 1;  // u를 MST에 포함
+
+        // u와 연결된 모든 정점에 대해 key값 갱신
+        for (int v = 0; v < n; v++) {
+            if (graph[u][v] && !inMST[v] && graph[u][v] < key[v]) {
+                key[v] = graph[u][v];
+                parent[v] = u;
+            }
+        }
+    }
+}
+
+int main() {
+    // 그래프 초기화 (예: graph[i][j]는 정점 i와 정점 j 사이의 가중치)
+    // 예시로 각 연결된 간선의 가중치를 입력하세요.
+
+    // prim() 함수 호출 (n은 정점 개수)
+    prim(n);
+
+    return 0;
+}
+```
 ### 위상 정렬
 - 방향 그래프에서 정점들을 선형 순서로 배열하는 방법.
 - 각 정점은 그와 연결된 간선의 방향에 따라 순서가 결정됨. 
@@ -1286,7 +1553,7 @@ int main() {
 - 키를 입력받아, 해시 값을 인덱스로 사용하여 데이터를 찾을 수 있도록 하는 자료 구조. 
 - 배열로 구현됨.
 
-![image](https://gbdai.tistory.com/16?pidx=2.png)
+![Image](images/해시테이블.png)
 
 ### 해시 함수
   임의의 크기를 가진 입력 데이터를 받아들여, 이를 고정된 크기의 출력 값(해시 값) 으로 변환하는 함수.
