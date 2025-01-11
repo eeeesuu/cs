@@ -278,7 +278,7 @@
 ### 메모리 계층 구조 (Memory Hierarchy)
 - 정의: 메모리 장치들이 성능과 비용을 기준으로 계층적으로 구성된 구조
 
-![Image](images/메모리계층구조.png)
+![Image](images/Mem.png)
 #### 구성 요소 
 #### 1. 레지스터 (Registers)
 - 위치: CPU 내에 위치
