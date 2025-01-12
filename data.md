@@ -1138,7 +1138,6 @@ int main() {
 - 서로 겹치지 않는 집합을 효율적으로 합치고, 특정 원소가 속한 집합을 찾는 문제를 해결. 
 - 분리 집합을 합치는 union 연산과 트리의 루트를 찾아가는 과정인 find 연산을 제공.
 
-![Image](images/union-find%20alg.png)
 
 #### 경로 압축 및 크기 조정 
 - 경로 압축: 
@@ -1147,66 +1146,74 @@ int main() {
  - 크기 조정:
    - union 연산에서 사용되는 최적화 기법.
    - 작은 트리를 더 큰 트리 아래에 붙여서 트리의 높이를 최소화하도록 함.
-- 외부 링크: <https://velog.io/@jjhjjh1159/Union-Find-최적화>
 
 ## 그래프 (Graph)
-- 노드(정점)와 간선으로 구성된 수학적 구조.
-- 정점: 각 노드를 나타내는 요소.
-- 간선: 두 정점을 연결하는 선.
-#### 방향 그래프
-- 간선이 방향을 가지는 그래프.
-- 간선은 출발점에서 도착점으로 연결됨.
-- 간선은 (A → B)와 같이 방향을 가진다. 
+- 노드(정점)와 간선으로 구성된 수학적 구조
+- 정점: 각 노드를 나타내는 요소
+- 간선: 두 정점을 연결하는 선
+#### 방향 그래프 (Directed Graph)
+- 간선이 방향을 가지는 그래프
+- 간선은 출발점에서 도착점으로 연결됨
+- 간선은 (A → B)와 같이 방향을 가진다
 
-![Image](images/방향그래프.png)
+![Image](images/directedgraph.png)
 
-#### 무방향 그래프 
-- 간선에 방향이 없는 그래프.
-- 두 정점은 서로 양방향으로 연결됨.
-- 간선은 (A, B)와 같이 두 정점 간의 관계로 나타낸다. 
+#### 무방향 그래프 (Undirected Graph)
+- 간선에 방향이 없는 그래프
+- 두 정점은 서로 양방향으로 연결됨
+- 간선은 (A, B)와 같이 두 정점 간의 관계로 나타낸다
 
-![Image](images/무방향그래프.png)
+![Image](images/undirectedgraph.png)
 
-#### 가중 그래프 
-- 간선에 가중치가 부여된 그래프.
-- 가중치는 두 정점 간의 거리나 비용 등을 나타냄.
+#### 가중 그래프 (Weighted Graph)
+- 간선에 가중치가 부여된 그래프
+- 가중치는 두 정점 간의 거리나 비용 등을 나타냄
 
-![Image](images/가중그래프.png)
+![Image](images/weightedgraph.png)
 
 #### 비가중 그래프
-- 간선에 가중치가 없는 그래프.
+- 간선에 가중치가 없는 그래프
 
 ### 그래프 표현 방식
 #### (1) 인접 행렬 (Adjacency Matrix)
-- 정점의 수가 n일 때, n*n 크기의 이차원 배열로 그래프를 표현. 
-- 각 배열의 값은 두 정점 간의 간선의 존재 여부를 나타냄. 
-- 방향 그래프에서는 (i, j) 위치에 간선이 있으면 1, 없으면 0을 저장.
-- 무방향 그래프에서는 (i, j)와 (j, i)가 모두 1로 표시.
+- 정점의 수가 n일 때, n*n 크기의 이차원 배열로 그래프를 표현
+- 각 배열의 값은 두 정점 간의 간선의 존재 여부를 나타냄
+- 방향 그래프에서는 (i, j) 위치에 간선이 있으면 1, 없으면 0을 저장
+- 무방향 그래프에서는 (i, j)와 (j, i)가 모두 1로 표시
 
-![Image](images/인접행렬.png)
+![Image](images/Adjacency%20Matrix.png)
 
 #### (2) 인접 리스트 (Adjacency List)
-- 각 정점에 대해 해당 정점과 연결된 모든 정점들의 리스트를 저장. 
+- 각 정점에 대해 해당 정점과 연결된 모든 정점들의 리스트를 저장
+- 장점: 동적 데이터 구조 사용 가능
+- 단점: 간선이 많을수록 저장해야 할 리스트가 커져서 메모리 효율성이 떨어짐
 
-![Image](images/인접리스트.png)
-
+![Image](images/Adjacency%20List.png)
 
 ### 그래프 순회
-#### (1) 너비 우선 탐색
-- 큐 자료구조를 사용하여 그래프를 탐색.
-- 시작 정점에서부터 인접한 정점들을 차례로 방문하며, 가까운 곳부터 탐색.
+#### (1) 너비 우선 탐색 (BFS)
+- 큐 자료구조를 사용하여 그래프를 탐색
+- 시작 정점에서부터 인접한 정점들을 차례로 방문하며, 가까운 곳부터 탐색
 ```c
-int graph[10][10] = {0};
-int visited[10] = {0};
+#define MAX_VERTICES 100
 
-typedef struct {
-    int items[10];
+typedef struct Node {
+    int vertex;
+    struct Node* next;
+} Node;
+
+Node* adjList[MAX_VERTICES];
+int visited[MAX_VERTICES];
+
+typedef struct Queue {
+    int items[MAX_VERTICES];
     int front, rear;
 } Queue;
 
-void initQueue(Queue* q) {
-    q->front = -1;
-    q->rear = -1;
+Queue* createQueue() {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->front = q->rear = -1;
+    return q;
 }
 
 int isEmpty(Queue* q) {
@@ -1214,361 +1221,464 @@ int isEmpty(Queue* q) {
 }
 
 void enqueue(Queue* q, int value) {
-    if (q->rear == MAX_NODES - 1) return;
+    if (q->rear == MAX_VERTICES - 1) return;
     if (q->front == -1) q->front = 0;
     q->items[++q->rear] = value;
 }
 
 int dequeue(Queue* q) {
     if (isEmpty(q)) return -1;
-    int value = q->items[q->front++];
+    int item = q->items[q->front++];
     if (q->front > q->rear) q->front = q->rear = -1;
-    return value;
+    return item;
 }
 
-void bfs(int start) {
-    Queue q;
-    initQueue(&q);
-    enqueue(&q, start);
+void addEdge(int src, int dest) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->vertex = dest;
+    newNode->next = adjList[src];
+    adjList[src] = newNode;
+}
+
+void BFS(int start) {
+    Queue* q = createQueue();
     visited[start] = 1;
+    enqueue(q, start);
 
-    while (!isEmpty(&q)) {
-        int node = dequeue(&q);
+    while (!isEmpty(q)) {
+        int current = dequeue(q);
+        Node* temp = adjList[current];
+        while (temp) {
+            int adjVertex = temp->vertex;
+            if (!visited[adjVertex]) {
+                visited[adjVertex] = 1;
+                enqueue(q, adjVertex);
+            }
+            temp = temp->next;
+        }
+    }
+}
+```
+```java
+import java.util.*;
 
-        for (int i = 0; i < MAX_NODES; i++) {
-            if (graph[node][i] == 1 && !visited[i]) {
-                enqueue(&q, i);
-                visited[i] = 1;
+class Graph {
+    private LinkedList<Integer>[] adjList;
+    private boolean[] visited;
+
+    public Graph(int vertices) {
+        adjList = new LinkedList[vertices];
+        visited = new boolean[vertices];
+        for (int i = 0; i < vertices; i++) adjList[i] = new LinkedList<>();
+    }
+
+    public void addEdge(int src, int dest) {
+        adjList[src].add(dest);
+    }
+
+    public void BFS(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        visited[start] = true;
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int neighbor : adjList[current]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
             }
         }
     }
 }
-
-int main() {
-    graph[0][1] = graph[1][0] = 1;
-    graph[0][2] = graph[2][0] = 1;
-    graph[1][3] = graph[3][1] = 1;
-    graph[2][4] = graph[4][2] = 1;
-
-    bfs(0);  // 0번 노드부터 탐색 시작
-
-    return 0;
-}
 ```
-#### (2) 깊이 우선 탐색
-- 스택 또는 재귀를 사용.
-- 시작 정점에서부터 가능한 한 깊게 탐색하고, 더 이상 갈 곳이 없으면 돌아가서 다른 경로 탐색.
+#### (2) 깊이 우선 탐색 (DFS)
+- 스택 또는 재귀를 사용
+- 시작 정점에서부터 가능한 한 깊게 탐색하고, 더 이상 갈 곳이 없으면 돌아가서 다른 경로 탐색
 ```c
-int graph[10][10] = {0};
-int visited[10] = {0};
+#define MAX_VERTICES 100
 
-// 깊이 우선 탐색 함수
-void dfs(int node) {
-    // 노드를 방문했다고 표시
-    visited[node] = 1;
-    printf("%d ", node);
+typedef struct Node {
+    int vertex;
+    struct Node* next;
+} Node;
 
-    // 인접 노드를 재귀적으로 탐색
-    for (int i = 0; i < 10; i++) {
-        if (graph[node][i] == 1 && !visited[i]) {
-            dfs(i);
+Node* adjList[MAX_VERTICES];
+int visited[MAX_VERTICES];
+
+void addEdge(int src, int dest) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->vertex = dest;
+    newNode->next = adjList[src];
+    adjList[src] = newNode;
+}
+
+void DFS(int start) {
+    visited[start] = 1;
+    Node* temp = adjList[start];
+    while (temp) {
+        if (!visited[temp->vertex]) DFS(temp->vertex);
+        temp = temp->next;
+    }
+} 
+```
+```java
+import java.util.*;
+
+class Graph {
+    private LinkedList<Integer>[] adjList;
+    private boolean[] visited;
+
+    public Graph(int vertices) {
+        adjList = new LinkedList[vertices];
+        visited = new boolean[vertices];
+        for (int i = 0; i < vertices; i++) adjList[i] = new LinkedList<>();
+    }
+
+    public void addEdge(int src, int dest) {
+        adjList[src].add(dest);
+    }
+
+    public void DFS(int start) {
+        visited[start] = true;
+        for (int neighbor : adjList[start]) {
+            if (!visited[neighbor]) DFS(neighbor);
         }
     }
-}
-
-int main() {
-    // 그래프의 간선 정의 (0부터 시작하는 인덱스)
-    graph[0][1] = graph[1][0] = 1;
-    graph[0][2] = graph[2][0] = 1;
-    graph[1][3] = graph[3][1] = 1;
-    graph[2][4] = graph[4][2] = 1;
-
-    printf("DFS 탐색 순서: ");
-    dfs(0);  // 0번 노드부터 탐색 시작
-
-    return 0;
 }
 ```
 ### 최단 경로 알고리즘
-#### 다익스트라 알고리즘
-- 가중치가 있는 그래프에서 두 정점 사이의 최단 경로를 찾는 알고리즘. 
+#### 다익스트라 알고리즘 (Dijkstra Algorithm)
+- 가중치가 있는 그래프에서 두 정점 사이의 최단 경로를 찾는 알고리즘
 ```c
-#include <limits.h>
-
-#define N 100  // 최대 정점 개수
-#define INF INT_MAX
-
-void dijkstra(int graph[N][N], int start, int dist[], int n) {
-    int visited[N] = {0};  // 방문 여부 배열
-
-    // 초기화
-    for (int i = 0; i < n; i++) {
+void dijkstra(int vertices, int start) {
+    for (int i = 0; i < vertices; i++) {
         dist[i] = INF;
+        visited[i] = 0;
     }
     dist[start] = 0;
 
-    for (int count = 0; count < n - 1; count++) {
-        int u = -1;
-
-        // 최소 거리 정점 u 선택
-        for (int i = 0; i < n; i++) {
-            if (!visited[i] && (u == -1 || dist[i] < dist[u])) {
-                u = i;
-            }
-        }
-
+    for (int i = 0; i < vertices - 1; i++) {
+        int u = minDistance(vertices);
         visited[u] = 1;
 
-        // 인접한 정점의 거리 갱신
-        for (int v = 0; v < n; v++) {
-            if (!visited[v] && graph[u][v] != 0 && dist[u] != INF) {
-                int newDist = dist[u] + graph[u][v];
-                if (newDist < dist[v]) {
-                    dist[v] = newDist;
-                }
+        for (int v = 0; v < vertices; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INF && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
             }
         }
     }
 }
 ```
-#### 벨만-포드 알고리즘
-- 다익스트라와 비슷하지만 음의 가중치를 다룰 수 있는 알고리즘.
-```c
-#define N 100  // 최대 정점 개수
-#define INF 1000000
+```java
+class Dijkstra {
+    private static final int INF = Integer.MAX_VALUE;
 
-typedef struct {
-    int src, dest, weight;
-} Edge;
+    public static void dijkstra(int vertices, int[][] graph, int start) {
+        int[] dist = new int[vertices];
+        boolean[] visited = new boolean[vertices];
 
-void bellmanFord(Edge edges[], int edgeCount, int start, int dist[], int n) {
-    // 거리 배열 초기화
-    for (int i = 0; i < n; i++) {
-        dist[i] = INF;
+        Arrays.fill(dist, INF);
+        dist[start] = 0;
+
+        for (int i = 0; i < vertices - 1; i++) {
+            int u = minDistance(vertices, dist, visited);
+            visited[u] = true;
+
+            for (int v = 0; v < vertices; v++) {
+                if (!visited[v] && graph[u][v] != 0 && dist[u] != INF && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
     }
+
+    private static int minDistance(int vertices, int[] dist, boolean[] visited) {
+        int min = INF, minIndex = -1;
+        for (int i = 0; i < vertices; i++) {
+            if (!visited[i] && dist[i] < min) {
+                min = dist[i];
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+}
+```
+#### 벨만-포드 알고리즘 (Bellman-Ford Algorithm)
+- 다익스트라와 비슷하지만 음의 가중치를 다룰 수 있는 알고리즘
+```c
+void bellmanFord(int vertices, int edgesCount, int start) {
+    int dist[vertices];
+    for (int i = 0; i < vertices; i++) dist[i] = INF;
     dist[start] = 0;
 
-    // 정점 - 1번 반복
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < edgeCount; j++) {
-            int u = edges[j].src;
-            int v = edges[j].dest;
-            int weight = edges[j].weight;
+    for (int i = 1; i < vertices; i++) 
+        for (int j = 0; j < edgesCount; j++) 
+            if (dist[edges[j].src] + edges[j].weight < dist[edges[j].dest])
+                dist[edges[j].dest] = dist[edges[j].src] + edges[j].weight;
 
-            if (dist[u] != INF && dist[u] + weight < dist[v]) {
-                dist[v] = dist[u] + weight;
-            }
-        }
+    for (int i = 0; i < edgesCount; i++)
+        if (dist[edges[i].src] + edges[i].weight < dist[edges[i].dest])
+            printf("Negative cycle detected\n");
+}
+```
+```java
+class BellmanFord {
+    static final int INF = Integer.MAX_VALUE;
+
+    static class Edge {
+        int src, dest, weight;
+        Edge(int src, int dest, int weight) { this.src = src; this.dest = dest; this.weight = weight; }
     }
 
-    // 음수 가중치 사이클 확인
-    for (int j = 0; j < edgeCount; j++) {
-        int u = edges[j].src;
-        int v = edges[j].dest;
-        int weight = edges[j].weight;
+    public static void bellmanFord(int vertices, Edge[] edges, int start) {
+        int[] dist = new int[vertices];
+        for (int i = 0; i < vertices; i++) dist[i] = INF;
+        dist[start] = 0;
 
-        if (dist[u] != INF && dist[u] + weight < dist[v]) {
-            // 음수 사이클 존재
-            dist[0] = -1;  // 에러 표시로 사용
-            return;
-        }
+        for (int i = 1; i < vertices; i++) 
+            for (Edge e : edges)
+                if (dist[e.src] + e.weight < dist[e.dest])
+                    dist[e.dest] = dist[e.src] + e.weight;
+
+        for (Edge e : edges)
+            if (dist[e.src] + e.weight < dist[e.dest])
+                System.out.println("Negative cycle detected");
     }
 }
 ```
-#### 폴로이드-워셜 알고리즘
-- 모든 정점 간의 최단 경로를 구하는 알고리즘.
+#### 플로이드-워셜 알고리즘 (Floyd-Warshall Algorithm)
+- 모든 정점 간의 최단 경로를 구하는 알고리즘
 ```c
-void floydWarshall(int graph[][N], int N) {
-    for (int k = 0; k < N; k++) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (graph[i][k] != INF && graph[k][j] != INF) {
-                    int newDist = graph[i][k] + graph[k][j];
-                    if (newDist < graph[i][j]) {
-                        graph[i][j] = newDist;
-                    }
-                }
-            }
+void floydWarshall(int graph[V][V]) {
+    int dist[V][V];
+    for (int i = 0; i < V; i++) 
+        for (int j = 0; j < V; j++) 
+            dist[i][j] = graph[i][j];
+
+    for (int k = 0; k < V; k++) 
+        for (int i = 0; i < V; i++) 
+            for (int j = 0; j < V; j++) 
+                if (dist[i][k] != INF && dist[k][j] != INF)
+                    dist[i][j] = dist[i][j] < dist[i][k] + dist[k][j] ? dist[i][j] : dist[i][k] + dist[k][j];
+
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) 
+            printf("%s ", dist[i][j] == INF ? "INF" : dist[i][j] + " ");
+        printf("\n");
+    }
+}
+```
+```java
+class FloydWarshall {
+    static final int INF = Integer.MAX_VALUE, V = 4;
+
+    public static void floydWarshall(int[][] graph) {
+        int[][] dist = graph.clone();
+        for (int k = 0; k < V; k++) 
+            for (int i = 0; i < V; i++) 
+                for (int j = 0; j < V; j++) 
+                    if (dist[i][k] != INF && dist[k][j] != INF)
+                        dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
+
+        for (int[] row : dist) {
+            for (int val : row)
+                System.out.print((val == INF ? "INF" : val) + " ");
+            System.out.println();
         }
+    }
+
+    public static void main(String[] args) {
+        int[][] graph = { {0, 3, INF, 7}, {3, 0, 1, INF}, {INF, 1, 0, 2}, {7, INF, 2, 0} };
+        floydWarshall(graph);
     }
 }
 ```
 ### 최소 신장 트리
-- 가중치가 있는 연결 그래프에서 모든 정점을 최소 비용으로 연결하는 트리. 
-#### 크루스칼 알고리즘
-- 간선 중심의 알고리즘. 
-- 간선들을 가중치 순으로 정렬한 후, 가중치가 작은 간선부터 하나씩 선택하여 트리를 확장. 
-- 사이클이 생기지 않도록 검사. 
+- 가중치가 있는 연결 그래프에서 모든 정점을 최소 비용으로 연결하는 트리
+#### 크루스칼 알고리즘 (Kruskal's Algorithm)
+- 간선 중심의 알고리즘
+- 간선들을 가중치 순으로 정렬한 후, 가중치가 작은 간선부터 하나씩 선택하여 트리를 확장
+- 사이클이 생기지 않도록 검사
 ```c
-#define N 100  // 최대 정점 개수
-#define M 500  // 최대 간선 개수
-
-typedef struct {
-    int src, dest, weight;
-} Edge;
-
-Edge edges[M];
-int parent[N], rank[N];
-
-void init(int n) {
-    for (int i = 0; i < n; i++) {
-        parent[i] = i;
-        rank[i] = 0;
-    }
-}
-
-int find(int x) {
-    if (parent[x] != x) {
-        parent[x] = find(parent[x]);  // 경로 압축
-    }
-    return parent[x];
-}
-
-void unite(int x, int y) {
-    int rootX = find(x);
-    int rootY = find(y);
-
-    if (rootX != rootY) {
-        if (rank[rootX] > rank[rootY]) {
-            parent[rootY] = rootX;
-        } else if (rank[rootX] < rank[rootY]) {
-            parent[rootX] = rootY;
-        } else {
-            parent[rootY] = rootX;
-            rank[rootX]++;
-        }
-    }
-}
-
-void sortEdges(int edgeCount) {
-    for (int i = 0; i < edgeCount - 1; i++) {
-        for (int j = 0; j < edgeCount - i - 1; j++) {
-            if (edges[j].weight > edges[j + 1].weight) {
-                Edge temp = edges[j];
-                edges[j] = edges[j + 1];
-                edges[j + 1] = temp;
-            }
-        }
-    }
-}
-
-int kruskal(int edgeCount, int n) {
-    init(n);
-    sortEdges(edgeCount);
+void kruskal(int vertices, int edgesCount) {
+    for (int i = 0; i < vertices; i++) parent[i] = i;
+    qsort(edges, edgesCount, sizeof(Edge), compareEdges);
 
     int mstWeight = 0;
-    int mstEdges = 0;
-
-    for (int i = 0; i < edgeCount && mstEdges < n - 1; i++) {
-        int u = edges[i].src;
-        int v = edges[i].dest;
-        int weight = edges[i].weight;
-
-        if (find(u) != find(v)) {
-            unite(u, v);
-            mstWeight += weight;
-            mstEdges++;
+    for (int i = 0; i < edgesCount; i++) {
+        if (find(edges[i].u) != find(edges[i].v)) {
+            printf("%d-%d %d\n", edges[i].u, edges[i].v, edges[i].weight);
+            mstWeight += edges[i].weight;
+            unionSets(edges[i].u, edges[i].v);
         }
     }
-
-    return mstWeight;  // MST의 총 가중치
+    printf("Total MST weight: %d\n", mstWeight);
 }
 ```
-#### 프림 알고리즘
-- 정점 중심의 알고리즘. 
-- 하나의 정점에서 시작해, 연결된 간선 중 가장 작은 가중치의 간선을 계속 선택하며 트리를 확장.
-```c
-#include <limits.h>
+```java
+class Kruskal {
+    static class Edge { int u, v, weight; Edge(int u, int v, int weight) { this.u = u; this.v = v; this.weight = weight; } }
 
-#define N 100  // 최대 정점 개수
-
-int graph[N][N];  // 그래프의 인접 행렬
-int key[N];       // 최소 가중치 배열
-int parent[N];    // 부모 배열
-int inMST[N];     // MST에 포함 여부
-
-void prim(int n) {
-    for (int i = 0; i < n; i++) {
-        key[i] = INT_MAX;
-        inMST[i] = 0;
+    static class UnionFind {
+        int[] parent;
+        UnionFind(int size) { parent = new int[size]; Arrays.fill(parent, -1); }
+        int find(int i) { return (parent[i] == i) ? i : (parent[i] = find(parent[i])); }
+        void union(int u, int v) { parent[find(u)] = find(v); }
     }
 
-    key[0] = 0;  // 첫 번째 정점부터 시작
-    parent[0] = -1;  // 첫 번째 정점은 부모가 없음
+    public static void kruskal(int vertices, List<Edge> edges) {
+        UnionFind uf = new UnionFind(vertices);
+        Collections.sort(edges, Comparator.comparingInt(e -> e.weight));
 
-    for (int count = 0; count < n - 1; count++) {
-        int u = -1;
-
-        // 가장 작은 key 값을 가지는 정점 u 찾기
-        for (int v = 0; v < n; v++) {
-            if (!inMST[v] && (u == -1 || key[v] < key[u])) {
-                u = v;
+        int mstWeight = 0;
+        for (Edge e : edges) {
+            if (uf.find(e.u) != uf.find(e.v)) {
+                System.out.println(e.u + "-" + e.v + " " + e.weight);
+                mstWeight += e.weight;
+                uf.union(e.u, e.v);
             }
         }
+        System.out.println("Total MST weight: " + mstWeight);
+    }
 
-        inMST[u] = 1;  // u를 MST에 포함
+    public static void main(String[] args) {
+        List<Edge> edges = Arrays.asList(
+            new Edge(0, 1, 10), new Edge(0, 2, 6), new Edge(0, 3, 5),
+            new Edge(1, 3, 15), new Edge(2, 3, 4)
+        );
+        kruskal(4, edges);
+    }
+}
+```
+#### 프림 알고리즘 (Prim's Algorithm)
+- 정점 중심의 알고리즘
+- 하나의 정점에서 시작해, 연결된 간선 중 가장 작은 가중치의 간선을 계속 선택하며 트리를 확장
+```c
+void prim(int vertices) {
+    int key[vertices], parent[vertices], visited[vertices];
+    for (int i = 0; i < vertices; i++) key[i] = INF, visited[i] = 0;
+    key[0] = 0;
 
-        // u와 연결된 모든 정점에 대해 key값 갱신
-        for (int v = 0; v < n; v++) {
-            if (graph[u][v] && !inMST[v] && graph[u][v] < key[v]) {
+    for (int count = 0; count < vertices - 1; count++) {
+        int u = -1, minKey = INF;
+        for (int v = 0; v < vertices; v++) if (!visited[v] && key[v] < minKey) { minKey = key[v]; u = v; }
+        visited[u] = 1;
+
+        for (int v = 0; v < vertices; v++) if (graph[u][v] && !visited[v] && graph[u][v] < key[v]) {
+            key[v] = graph[u][v];
+            parent[v] = u;
+        }
+    }
+
+    for (int i = 1; i < vertices; i++) printf("%d-%d %d\n", parent[i], i, graph[i][parent[i]]);
+}     
+```
+```java
+class Prim {
+    static final int INF = Integer.MAX_VALUE;
+    static int[][] graph = {
+        {0, 2, 0, 6, 0}, {2, 0, 3, 8, 5}, {0, 3, 0, 0, 7}, {6, 8, 0, 0, 9}, {0, 5, 7, 9, 0}
+    };
+
+    public static void prim(int vertices) {
+        int[] key = new int[vertices], parent = new int[vertices];
+        boolean[] visited = new boolean[vertices];
+        java.util.Arrays.fill(key, INF);
+        key[0] = 0;
+
+        for (int count = 0; count < vertices - 1; count++) {
+            int u = -1, minKey = INF;
+            for (int v = 0; v < vertices; v++) if (!visited[v] && key[v] < minKey) { minKey = key[v]; u = v; }
+            visited[u] = true;
+
+            for (int v = 0; v < vertices; v++) if (graph[u][v] != 0 && !visited[v] && graph[u][v] < key[v]) {
                 key[v] = graph[u][v];
                 parent[v] = u;
             }
         }
+
+        for (int i = 1; i < vertices; i++) System.out.println(parent[i] + "-" + i + " " + graph[i][parent[i]]);
     }
-}
 
-int main() {
-    // 그래프 초기화 (예: graph[i][j]는 정점 i와 정점 j 사이의 가중치)
-    // 예시로 각 연결된 간선의 가중치를 입력하세요.
-
-    // prim() 함수 호출 (n은 정점 개수)
-    prim(n);
-
-    return 0;
+    public static void main(String[] args) { prim(5); }
 }
 ```
 ### 위상 정렬
-- 방향 그래프에서 정점들을 선형 순서로 배열하는 방법.
-- 각 정점은 그와 연결된 간선의 방향에 따라 순서가 결정됨. 
+- 방향 그래프에서 정점들을 선형 순서로 배열하는 방법
+- 각 정점은 그와 연결된 간선의 방향에 따라 순서가 결정됨
 - 특징: 
-   - 방향성 그래프에서만 가능: 순환이 있으면 위상 정렬 불가능. 
-   - 선형 순서: 모든 정점을 하나의 선형 순서로 배치.
+   - 방향성 그래프에서만 가능: 순환이 있으면 위상 정렬 불가능 
+   - 선형 순서: 모든 정점을 하나의 선형 순서로 배치
 ### 강결합 요소 탐색
 - 강결합 요소: 
-   - 모든 정점들이 서로 도달 가능한 부분 그래프. 
-   - 최소한 하나의 사이클이 존재하는 부분 그래프.
+   - 모든 정점들이 서로 도달 가능한 부분 그래프
+   - 최소한 하나의 사이클이 존재하는 부분 그래프
   
 (1) Kosaraju의 알고리즘
-- DFS를 수행하여 후속 정점에 대한 처리 순서를 구함. 
-- 그래프의 간선을 반전시킨 뒤, 스택에서 정점을 하나씩 꺼내며 DFS를 수행.
+- DFS를 수행하여 후속 정점에 대한 처리 순서를 구함
+- 그래프의 간선을 반전시킨 뒤, 스택에서 정점을 하나씩 꺼내며 DFS를 수행
  
 (2) Tarjan의 알고리즘
-- DFS를 한 번만 수행.
-- 각 정점의 low-link 값을 계산하여 강결합 요소를 구함. 
+- DFS를 한 번만 수행
+- 각 정점의 low-link 값을 계산하여 강결합 요소를 구함
 
 ## 해시 
-데이터를 고정된 크기의 값으로 변환하는 일방향 함수.
+데이터를 고정된 크기의 값으로 변환하는 일방향 함수
 ### 해시 테이블
-- 키를 입력받아, 해시 값을 인덱스로 사용하여 데이터를 찾을 수 있도록 하는 자료 구조. 
-- 배열로 구현됨.
+- 키를 입력받아, 해시 값을 인덱스로 사용하여 데이터를 찾을 수 있도록 하는 자료 구조
+- 배열로 구현됨
 
-![Image](images/해시테이블.png)
+![Image](images/hashtable.png)
 
 ### 해시 함수
-  임의의 크기를 가진 입력 데이터를 받아들여, 이를 고정된 크기의 출력 값(해시 값) 으로 변환하는 함수.
-  - 일방향성: 입력값으로 출력값을 계산할 수 있지만, 출력값만 가지고 원본 데이터 추측 불가능.
+  임의의 크기를 가진 입력 데이터를 받아들여, 이를 고정된 크기의 출력 값(해시 값) 으로 변환하는 함수
+  - 일방향성: 입력값으로 출력값을 계산할 수 있지만, 출력값만 가지고 원본 데이터 추측 불가능
   - 고정 크기: 출력값의 크기는 고정.
-  - 충돌 회피: 서로 다른 두 입력값에 대해 동일한 해시값을 출력하는 충돌이 적어야 함.
+  - 충돌 회피: 서로 다른 두 입력값에 대해 동일한 해시값을 출력하는 충돌이 적어야 함
 ### 충돌 처리 
-두 개 이상의 다른 입력값이 동일한 해시 값을 생성할 경우 이를 처리.
-#### (1) 개방 주소법
-- 충돌이 발생하면 다른 빈 슬롯을 찾아 데이터를 저장. 
-- 리스트를 사용하지 않고 모든 데이터를 해시 테이블 자체에 저장.
+두 개 이상의 다른 입력값이 동일한 해시 값을 생성할 경우 이를 처리
+#### (1) 개방 주소법 (Open Addressing)
+- 충돌이 발생하면 다른 빈 슬롯을 찾아 데이터를 저장
+- 리스트를 사용하지 않고 모든 데이터를 해시 테이블 자체에 저장
+- 동작 방식:
+  - 선형 탐색: 해시 테이블의 다음 슬롯을 차례대로 검색하여 빈자리 찾음
+  - 이차 탐색: 일정한 간격을 두고 탐색하여 빈 슬롯을 찾음
+  - 이중 해싱: 두 번째 해시 함수에 의해 새로운 슬롯을 찾음
+- 장점: 메모리 사용량이 일정 
+- 단점: 테이블 크기를 동적으로 늘리는 것이 어려워, 해시 테이블 크기 관리가 필요 
 
-#### (2) 체이닝
-- 각 해시 테이블 슬롯에 링크드 리스트 또는 다른 자료 구조를 사용하여 충돌 처리.
-- 해시 테이블의 크기와 관계없이 충돌 처리 가능. 
+#### (2) 체이닝 (Chaining)
+- 각 해시 테이블 슬롯에 링크드 리스트 또는 다른 자료 구조를 사용하여 충돌 처리
+- 해시 테이블의 크기와 관계없이 충돌 처리 가능
+- 동작방식:
+  1. 각 해시 테이블의 슬롯은 링크드 리스트를 가리키는 포인터를 가짐
+  2. 해시 함수는 입력값을 해시 테이블의 인덱스로 변환
+  3. 충돌이 발생하면, 해당 키는 동일한 슬롯에 저장되지 않고, 해당 슬롯의 리스트에 차례대로 연결
+- 장점: 해시 테이블의 크기를 미리 예측할 필요가 없음
+- 단점: 각 슬롯에 대한 추가적인 메모리가 필요
 
 ### 동적 크기 조정
-- 데이터를 추가하거나 삭제하는 동안 자료 구조의 크기를 자동으로 조정.
+- 데이터를 추가하거나 삭제하는 동안 자료 구조의 크기를 자동으로 조정
+1. 테이블 크기 확장(업사이징, Up-sizing):
+   - 테이블의 부하율이 높아지면, 기존 해시 테이블을 더 큰 크기로 확장
+   - 모든 기존 항목을 새로운 테이블로 재배치 
+2. 테이블 크기 축소(다운사이징, Down-sizing):
+   - 테이블의 부하율이 낮으면, 테이블의 크기를 축소할 수 있음
+   - 새 크기는 기존 크기의 절반 정도로 설정
+   - 재배치 필요 
+- 장점: 크기 조정을 통해 해시 충돌 최소화
+- 단점: 크기 변경 시 성능 저하 
+### 블룸 필터 (Bloom Filter)
+- 정의: 특정 원속 집합에 속하는지 검사하는데 사용할 수 있는 확룰형 자료구조
+- 특징:
+  - 공간 효율성: 원소를 직접 저장하지 않고 비트 배열을 사용해 원소의 존재 여부를 추적함으로써 메모리를 효율적으로 사용
+  - 빠른 검색 가능
+- 작동 원리:
+  1. 모든 비트를 0으로 초기 설정
+  2. 삽입하려는 원소를 해시 함수에 입력하여, 각 해시 함수가 반환한 인덱스 위치의 비트를 1로 설정
+  3. 검사하려는 원소를 해시 함수에 입력하여, 반환된 모든 인덱스 위치의 비트 확인
+- 장점: 메모리 사용량 적음
+- 단점: 기본적으로 삭제 불가 
