@@ -361,7 +361,7 @@
 ### TLB (Translation Lookaside Buffer)
 
 ![image](images/TLB.png)
-<img src="TLB.png" alt="Example Image" width="500" heught="300">
+
 
 - 정의: 가상 메모리 시스템에서 가상 주소를 물리 주소로 빠르게 변환하기 위해 사용되는 하드웨어 캐시
 - 동작 방식
