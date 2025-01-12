@@ -1194,52 +1194,9 @@ int main() {
 #### (1) 너비 우선 탐색 (BFS)
 - 큐 자료구조를 사용하여 그래프를 탐색
 - 시작 정점에서부터 인접한 정점들을 차례로 방문하며, 가까운 곳부터 탐색
+- 장점: 최단 경로 탐색에 적합
+- 단점: 큐를 사용하므로 DFS보다 메모리 사용량이 많음 
 ```c
-#define MAX_VERTICES 100
-
-typedef struct Node {
-    int vertex;
-    struct Node* next;
-} Node;
-
-Node* adjList[MAX_VERTICES];
-int visited[MAX_VERTICES];
-
-typedef struct Queue {
-    int items[MAX_VERTICES];
-    int front, rear;
-} Queue;
-
-Queue* createQueue() {
-    Queue* q = (Queue*)malloc(sizeof(Queue));
-    q->front = q->rear = -1;
-    return q;
-}
-
-int isEmpty(Queue* q) {
-    return q->front == -1;
-}
-
-void enqueue(Queue* q, int value) {
-    if (q->rear == MAX_VERTICES - 1) return;
-    if (q->front == -1) q->front = 0;
-    q->items[++q->rear] = value;
-}
-
-int dequeue(Queue* q) {
-    if (isEmpty(q)) return -1;
-    int item = q->items[q->front++];
-    if (q->front > q->rear) q->front = q->rear = -1;
-    return item;
-}
-
-void addEdge(int src, int dest) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->vertex = dest;
-    newNode->next = adjList[src];
-    adjList[src] = newNode;
-}
-
 void BFS(int start) {
     Queue* q = createQueue();
     visited[start] = 1;
@@ -1296,24 +1253,9 @@ class Graph {
 #### (2) 깊이 우선 탐색 (DFS)
 - 스택 또는 재귀를 사용
 - 시작 정점에서부터 가능한 한 깊게 탐색하고, 더 이상 갈 곳이 없으면 돌아가서 다른 경로 탐색
+- 장점: 메모리 사용량이 적음
+- 단점: 사이클이 있는 그래프에서 무한루프가 발생할 수 있으므로 방문 체크 여부가 필요 
 ```c
-#define MAX_VERTICES 100
-
-typedef struct Node {
-    int vertex;
-    struct Node* next;
-} Node;
-
-Node* adjList[MAX_VERTICES];
-int visited[MAX_VERTICES];
-
-void addEdge(int src, int dest) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->vertex = dest;
-    newNode->next = adjList[src];
-    adjList[src] = newNode;
-}
-
 void DFS(int start) {
     visited[start] = 1;
     Node* temp = adjList[start];
@@ -1451,6 +1393,11 @@ class BellmanFord {
 ```
 #### 플로이드-워셜 알고리즘 (Floyd-Warshall Algorithm)
 - 모든 정점 간의 최단 경로를 구하는 알고리즘
+- 특징:
+  - 음수 가중치 간선이 존재해도 동작
+  - 각 정점 쌍 간의 최단 거리 행렬이 출력
+- 장점: 음수 가중치가 있는 그래프도 처리 가능
+- 단점: 시간 복잡도가 높아 정점 수가 많을수록 비효율적 
 ```c
 void floydWarshall(int graph[V][V]) {
     int dist[V][V];
@@ -1502,6 +1449,8 @@ class FloydWarshall {
 - 간선 중심의 알고리즘
 - 간선들을 가중치 순으로 정렬한 후, 가중치가 작은 간선부터 하나씩 선택하여 트리를 확장
 - 사이클이 생기지 않도록 검사
+- 장점: 구현이 간단하고 직관적
+- 단점: 간선이 많은 경우 성능이 떨어질 수 있음
 ```c
 void kruskal(int vertices, int edgesCount) {
     for (int i = 0; i < vertices; i++) parent[i] = i;
@@ -1556,6 +1505,8 @@ class Kruskal {
 #### 프림 알고리즘 (Prim's Algorithm)
 - 정점 중심의 알고리즘
 - 하나의 정점에서 시작해, 연결된 간선 중 가장 작은 가중치의 간선을 계속 선택하며 트리를 확장
+- 장점: 구현이 직관적이며 간선 수에 크게 의존하지 않음
+- 단점: 간선 수가 적은 경우 크루스칼보다 느릴 수 있음
 ```c
 void prim(int vertices) {
     int key[vertices], parent[vertices], visited[vertices];
