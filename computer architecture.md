@@ -389,6 +389,172 @@
   1. 물리 메모리가 부족하면 메모리 확보하기 위해 페이지 교체를 실행
   2. 선택된 페이지는 스왑 공간으로 이동하고, 물리 메모리에서 해당 공간을 해제
   3. 스왑 공간에 저장된 페이지가 필요해지면 디스크에서 메모리로 로드 
+
+</div>
+</details>
+<details>
+<summary>c언어 Swap 구현</summary>
+<div markdown="1">
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MEMORY_SIZE 4
+#define SWAP_SIZE 8
+
+typedef struct {
+    int process_id;
+    char data[20];
+} MemoryBlock;
+
+MemoryBlock memory[MEMORY_SIZE];
+MemoryBlock swap[SWAP_SIZE];
+int memory_index = 0;
+int swap_index = 0;
+
+void initialize_memory() {
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        memory[i].process_id = -1; // Empty
+    }
+    for (int i = 0; i < SWAP_SIZE; i++) {
+        swap[i].process_id = -1; // Empty
+    }
+}
+
+void load_to_memory(int process_id, const char *data) {
+    if (memory_index < MEMORY_SIZE) {
+        memory[memory_index].process_id = process_id;
+        strcpy(memory[memory_index].data, data);
+        printf("Loaded process %d to memory.\n", process_id);
+        memory_index++;
+    } else {
+        // Swap out the oldest process
+        printf("Memory full. Swapping out process %d.\n", memory[0].process_id);
+        swap[swap_index] = memory[0];
+        swap_index++;
+        
+        // Shift memory
+        for (int i = 1; i < MEMORY_SIZE; i++) {
+            memory[i - 1] = memory[i];
+        }
+        
+        // Add new process
+        memory[MEMORY_SIZE - 1].process_id = process_id;
+        strcpy(memory[MEMORY_SIZE - 1].data, data);
+        printf("Loaded process %d to memory.\n", process_id);
+    }
+}
+
+void print_status() {
+    printf("\nMemory:\n");
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        if (memory[i].process_id != -1) {
+            printf("Process %d: %s\n", memory[i].process_id, memory[i].data);
+        }
+    }
+
+    printf("\nSwap Space:\n");
+    for (int i = 0; i < swap_index; i++) {
+        if (swap[i].process_id != -1) {
+            printf("Process %d: %s\n", swap[i].process_id, swap[i].data);
+        }
+    }
+}
+
+int main() {
+    initialize_memory();
+
+    load_to_memory(1, "Data1");
+    load_to_memory(2, "Data2");
+    load_to_memory(3, "Data3");
+    load_to_memory(4, "Data4");
+    load_to_memory(5, "Data5"); // Trigger swap
+
+    print_status();
+    return 0;
+}
+```
+</div>
+</details>
+</div>
+
+</details>
+<details>
+<summary>java Swap 구현</summary>
+<div markdown="1">
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Process {
+    int processId;
+    String data;
+
+    public Process(int processId, String data) {
+        this.processId = processId;
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Process " + processId + ": " + data;
+    }
+}
+
+public class SwapExample {
+    private static final int MEMORY_SIZE = 4;
+    private static final int SWAP_SIZE = 8;
+
+    private final Queue<Process> memory = new LinkedList<>();
+    private final Queue<Process> swap = new LinkedList<>();
+
+    public void loadToMemory(int processId, String data) {
+        if (memory.size() < MEMORY_SIZE) {
+            memory.add(new Process(processId, data));
+            System.out.println("Loaded process " + processId + " to memory.");
+        } else {
+            // Swap out the oldest process
+            Process swappedOut = memory.poll();
+            swap.add(swappedOut);
+            System.out.println("Memory full. Swapped out process " + swappedOut.processId);
+
+            // Add new process
+            memory.add(new Process(processId, data));
+            System.out.println("Loaded process " + processId + " to memory.");
+        }
+    }
+
+    public void printStatus() {
+        System.out.println("\nMemory:");
+        for (Process p : memory) {
+            System.out.println(p);
+        }
+
+        System.out.println("\nSwap Space:");
+        for (Process p : swap) {
+            System.out.println(p);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwapExample swapExample = new SwapExample();
+
+        swapExample.loadToMemory(1, "Data1");
+        swapExample.loadToMemory(2, "Data2");
+        swapExample.loadToMemory(3, "Data3");
+        swapExample.loadToMemory(4, "Data4");
+        swapExample.loadToMemory(5, "Data5"); // Trigger swap
+
+        swapExample.printStatus();
+    }
+}
+```
+</div>
+</details>
+
 ### TLB (Translation Lookaside Buffer)
 
 ![image](images/TLB.png)
@@ -403,7 +569,125 @@
 - 장점: 메모리 접근 시간 단축
 - 단점: 하드웨어 캐시이므로 용량이 제한적
 
+</div>
+</details>
+<details>
+<summary>c언어 TLB 구현</summary>
+<div markdown="1">
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define TLB_SIZE 16
+
+typedef struct {
+    int page_number;
+    int frame_number;
+    bool valid;
+} TLBEntry;
+
+TLBEntry tlb[TLB_SIZE];
+
+void initialize_tlb() {
+    for (int i = 0; i < TLB_SIZE; i++) {
+        tlb[i].valid = false;
+    }
+}
+
+int search_tlb(int page_number) {
+    for (int i = 0; i < TLB_SIZE; i++) {
+        if (tlb[i].valid && tlb[i].page_number == page_number) {
+            return tlb[i].frame_number;  // TLB hit
+        }
+    }
+    return -1;  // TLB miss
+}
+
+void update_tlb(int page_number, int frame_number) {
+    // Simple FIFO replacement
+    static int next_entry = 0;
+    tlb[next_entry].page_number = page_number;
+    tlb[next_entry].frame_number = frame_number;
+    tlb[next_entry].valid = true;
+    next_entry = (next_entry + 1) % TLB_SIZE;
+}
+
+int main() {
+    initialize_tlb();
+
+    // Example usage
+    update_tlb(1, 100);
+    update_tlb(2, 200);
+
+    int frame = search_tlb(1);
+    if (frame != -1) {
+        printf("TLB Hit: Frame number = %d\n", frame);
+    } else {
+        printf("TLB Miss\n");
+    }
+
+    return 0;
+}
+```
+</div>
+</details>
+
+</div>
+</details>
+<details>
+<summary>java TLB 구현</summary>
+<div markdown="1">
+
+```java
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+class TLB {
+    private final int capacity;
+    private final Map<Integer, Integer> tlbCache;
+
+    public TLB(int capacity) {
+        this.capacity = capacity;
+        this.tlbCache = new LinkedHashMap<Integer, Integer>(capacity, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+                return size() > capacity;
+            }
+        };
+    }
+
+    public Integer search(int pageNumber) {
+        return tlbCache.getOrDefault(pageNumber, -1); // TLB miss -> return -1
+    }
+
+    public void update(int pageNumber, int frameNumber) {
+        tlbCache.put(pageNumber, frameNumber);
+    }
+
+    public void printTLB() {
+        System.out.println("Current TLB: " + tlbCache);
+    }
+}
+
+public class TLBExample {
+    public static void main(String[] args) {
+        TLB tlb = new TLB(16); // TLB with 16 entries
+
+        // Example usage
+        tlb.update(1, 100);
+        tlb.update(2, 200);
+
+        System.out.println("Frame for page 1: " + tlb.search(1)); // TLB Hit
+        System.out.println("Frame for page 3: " + tlb.search(3)); // TLB Miss
+
+        tlb.printTLB();
+    }
+}
+```
+</div>
+</details>
 
 ## 입출력 시스템
 - 정의: 컴퓨터 시스템 외부와 데이터를 교환하는 장치로, 사용자와 컴퓨터 간에 정보를 전달
