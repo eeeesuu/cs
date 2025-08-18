@@ -599,6 +599,41 @@ def factorial(n):
 - 문제 요구사항: 
     - 입력: N
     - 출력: NxN (체스판에 퀸을 배치할 수 있는 방법들)
+
+```python 
+def solve_n_queens(n):
+    solutions = []
+    board = [-1] * n  # board[i] = i행에 놓인 퀸의 열
+
+    def is_safe(row, col):
+        for r in range(row):
+            c = board[r]
+            if c == col or abs(c - col) == abs(r - row):
+                return False
+        return True
+
+    def place_queen(row):
+        if row == n:
+            solutions.append(board[:])
+            return
+        for col in range(n):
+            if is_safe(row, col):
+                board[row] = col
+                place_queen(row + 1)
+                board[row] = -1  # 백트랙
+
+    place_queen(0)
+    return solutions
+
+def print_solutions(solutions):
+    for sol in solutions:
+        for row in sol:
+            line = ['.'] * len(sol)
+            line[row] = 'Q'
+            print(''.join(line))
+        print()
+```
+
 #### Sudoku Solover
 - 스도쿠는 9x9 크기의 격자에 1부터 9까지의 숫자를 채우는 퍼즐이다. 
 - 알고리즘:
